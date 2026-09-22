@@ -54,6 +54,9 @@
 
   const slides = [...document.querySelectorAll(".slide")];
   let index = 0;
+  let sliderBusy = false;
+
+  const slideName = (el) => el.querySelector("h3")?.textContent.trim() || "watch";
 
   const paintSlides = () => {
     const total = slides.length;
@@ -65,18 +68,55 @@
       else if (rel === total - 1) el.classList.add("is-prev");
       else if (rel === 1) el.classList.add("is-next");
       const current = rel === 0;
-      el.setAttribute("aria-hidden", String(!current));
+      const peek = rel === 1 || rel === total - 1;
+      el.setAttribute("aria-hidden", String(!current && !peek));
       if (current) el.setAttribute("aria-current", "true");
       else el.removeAttribute("aria-current");
+      if (peek) {
+        el.setAttribute("role", "button");
+        el.tabIndex = 0;
+        el.setAttribute("aria-label", `Show ${slideName(el)}`);
+      } else {
+        el.removeAttribute("role");
+        el.removeAttribute("tabindex");
+        el.removeAttribute("aria-label");
+      }
     });
   };
 
-  const stepSlider = (dir) => {
-    const total = slides.length;
-    if (!total) return;
-    index = (index + dir + total) % total;
-    paintSlides();
+  const setFocusWatch = (n) => {
+    slides.forEach((el, i) => {
+      const img = el.querySelector(".slide-watch");
+      if (img) img.style.viewTransitionName = i === n ? "hl-focus" : "none";
+    });
   };
+
+  const goSlide = (next) => {
+    const total = slides.length;
+    if (!total || sliderBusy) return;
+    const dest = (next + total) % total;
+    if (dest === index) return;
+    const apply = () => {
+      index = dest;
+      paintSlides();
+    };
+    if (reduce || typeof document.startViewTransition !== "function") {
+      apply();
+      return;
+    }
+    setFocusWatch(dest);
+    sliderBusy = true;
+    slider?.classList.add("is-busy");
+    document
+      .startViewTransition(apply)
+      .finished.finally(() => {
+        setFocusWatch(-1);
+        sliderBusy = false;
+        slider?.classList.remove("is-busy");
+      });
+  };
+
+  const stepSlider = (dir) => goSlide(index + dir);
 
   paintSlides();
   prev?.addEventListener("click", () => stepSlider(-1));
@@ -85,6 +125,61 @@
     if (event.key === "ArrowRight") stepSlider(1);
     if (event.key === "ArrowLeft") stepSlider(-1);
   });
+  slides.forEach((el, n) => {
+    const activatePeek = (event) => {
+      if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
+      if (event.target.closest("a")) return;
+      event.preventDefault();
+      goSlide(n);
+    };
+    el.addEventListener("click", activatePeek);
+    el.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      activatePeek(event);
+    });
+  });
+
+  if (slider) {
+    let dragX = 0;
+    let startX = 0;
+    let dragging = false;
+    let dragged = false;
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      slider.classList.remove("is-dragging");
+      if (dragX < -48) stepSlider(1);
+      else if (dragX > 48) stepSlider(-1);
+      dragX = 0;
+    };
+    slider.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      if (event.target.closest("a, .highlights-controls")) return;
+      dragging = true;
+      dragged = false;
+      startX = event.clientX;
+      dragX = 0;
+      slider.classList.add("is-dragging");
+      slider.setPointerCapture(event.pointerId);
+    });
+    slider.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      dragX = event.clientX - startX;
+      if (Math.abs(dragX) > 12) dragged = true;
+    });
+    slider.addEventListener("pointerup", endDrag);
+    slider.addEventListener("pointercancel", endDrag);
+    slider.addEventListener(
+      "click",
+      (event) => {
+        if (!dragged) return;
+        dragged = false;
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      true
+    );
+  }
 
   const strip = document.querySelector("[data-reels]");
   const reelPrev = document.querySelector("[data-reel-prev]");

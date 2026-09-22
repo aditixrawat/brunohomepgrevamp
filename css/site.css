@@ -485,7 +485,7 @@ a {
   justify-content: flex-end;
   min-height: 100dvh;
   max-width: 32rem;
-  padding: calc(var(--nav) + 1.2rem) var(--pad) max(2rem, env(safe-area-inset-bottom));
+  padding: calc(var(--nav) + 1.2rem) var(--pad) max(5.25rem, calc(4.5rem + env(safe-area-inset-bottom, 0px)));
   padding-right: var(--pad-r);
 }
 
@@ -526,11 +526,17 @@ a {
 }
 
 .origin {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  margin-block: 0;
   background: var(--paper);
 }
 
 .origin-copy {
-  padding: 4.25rem var(--pad) 3.5rem;
+  padding: 4.25rem var(--pad);
   padding-right: var(--pad-r);
   margin: 0 auto;
   max-width: 38rem;
@@ -563,16 +569,17 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem 0.35rem;
+  padding: 0 1.5rem 1.15rem;
   padding-left: var(--pad);
   padding-right: var(--pad-r);
 }
 
 .highlights-bar h2 {
   margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.65rem, 6vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 .highlights-controls {
@@ -602,6 +609,7 @@ a {
 .highlights-stage {
   position: relative;
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .slide {
@@ -1176,6 +1184,10 @@ a {
     padding-bottom: 0;
   }
 
+  .hero-copy {
+    padding-bottom: max(2.75rem, env(safe-area-inset-bottom, 0px));
+  }
+
   .type-dock {
     top: calc(var(--nav) + 0.7rem);
     right: var(--pad-r);
@@ -1184,16 +1196,25 @@ a {
   }
 
   .highlights {
-    padding: 3.25rem 0 8.5rem;
+    overflow-x: clip;
+    overflow-y: visible;
+    padding: 2.15rem 0 7.25rem;
   }
 
   .highlights-bar {
-    padding: 0 clamp(2rem, 7vw, 6rem) 0.25rem;
+    padding: 0 clamp(2rem, 7vw, 6rem) 1.65rem;
+  }
+
+  .highlights-bar h2 {
+    font-size: clamp(1.9rem, 2.8vw, 2.55rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
   }
 
   .highlights-stage {
     height: 90vh;
     min-height: 38rem;
+    overflow: visible;
   }
 
   .slide {
@@ -1212,7 +1233,14 @@ a {
     display: flex;
     width: 30%;
     visibility: visible;
-    z-index: 1;
+    z-index: 4;
+    pointer-events: auto;
+  }
+
+  .slide.is-prev:focus-visible,
+  .slide.is-next:focus-visible {
+    outline: 2px solid var(--steel);
+    outline-offset: -10px;
   }
 
   .slide.is-prev .slide-copy,
@@ -1235,12 +1263,14 @@ a {
     left: 0;
     justify-content: flex-start;
     opacity: 0.32;
+    cursor: pointer;
   }
 
   .slide.is-next {
     right: 0;
     justify-content: flex-end;
     opacity: 0.26;
+    cursor: pointer;
   }
 
   .slide.is-prev .slide-watch {
@@ -1260,23 +1290,24 @@ a {
     display: block;
     padding: 0;
     z-index: 2;
+    pointer-events: none;
+  }
+
+  .slide.is-current .slide-watch,
+  .slide.is-current .slide-copy {
+    pointer-events: auto;
   }
 
   .slide-copy {
     position: absolute;
     left: 50%;
-    top: calc(100% + 0.85rem);
+    top: calc(100% + 1.05rem);
     bottom: auto;
     z-index: 3;
     margin: 0;
     transform: translateX(-50%);
     text-align: center;
-  }
-
-  .highlights-bar h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    pointer-events: auto;
   }
 
   .slide-copy h3 {
@@ -1296,6 +1327,10 @@ a {
     transform: translate(-50%, -50%);
     mix-blend-mode: normal;
     filter: none;
+  }
+
+  .slide.is-current .slide-copy {
+    animation: hl-copy 0.22s linear;
   }
 
   .slide.is-prev .slide-watch,
@@ -1435,8 +1470,7 @@ a {
   }
 
   .origin-copy {
-    padding-top: 6rem;
-    padding-bottom: 4.75rem;
+    padding: 5.5rem var(--pad);
     max-width: 44rem;
   }
 
@@ -1523,6 +1557,22 @@ a {
     transform: translateX(3px);
   }
 
+  .slide.is-prev:hover {
+    opacity: 0.78;
+  }
+
+  .slide.is-next:hover {
+    opacity: 0.72;
+  }
+
+  .slide.is-prev:hover .slide-watch {
+    transform: translateX(4%);
+  }
+
+  .slide.is-next:hover .slide-watch {
+    transform: translateX(-4%);
+  }
+
   .slide-copy a:hover {
     background-size: 40% 1px;
   }
@@ -1552,6 +1602,37 @@ a {
   .signup-form button:hover {
     opacity: 0.55;
     transform: translateX(6px);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-group(hl-focus) {
+  animation-duration: 0.52s;
+  animation-timing-function: var(--ease);
+}
+
+::view-transition-old(hl-focus) {
+  animation: none;
+  opacity: 0;
+}
+
+::view-transition-new(hl-focus) {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes hl-copy {
+  from {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%);
   }
 }
 
@@ -1588,6 +1669,11 @@ a {
     transition: none;
   }
 
+  .slide-watch {
+    view-transition-name: none;
+  }
+
+  .slide.is-current .slide-copy,
   .hero-copy,
   .drawer:not([hidden]),
   .nav-drop:hover .nav-sub,
