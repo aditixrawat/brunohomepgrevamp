@@ -54,7 +54,6 @@
 
   const slides = [...document.querySelectorAll(".slide")];
   let index = 0;
-  let sliderBusy = false;
 
   const slideName = (el) => el.querySelector("h3")?.textContent.trim() || "watch";
 
@@ -63,12 +62,15 @@
     if (!total) return;
     slides.forEach((el, n) => {
       el.classList.remove("is-prev", "is-current", "is-next");
-      const rel = (n - index + total) % total;
-      if (rel === 0) el.classList.add("is-current");
-      else if (rel === total - 1) el.classList.add("is-prev");
-      else if (rel === 1) el.classList.add("is-next");
-      const current = rel === 0;
-      const peek = rel === 1 || rel === total - 1;
+      let slot = n - index;
+      if (slot > total / 2) slot -= total;
+      if (slot < -total / 2) slot += total;
+      el.dataset.slot = String(Math.max(-2, Math.min(2, slot)));
+      if (slot === 0) el.classList.add("is-current");
+      else if (slot === -1) el.classList.add("is-prev");
+      else if (slot === 1) el.classList.add("is-next");
+      const current = slot === 0;
+      const peek = slot === -1 || slot === 1;
       el.setAttribute("aria-hidden", String(!current && !peek));
       if (current) el.setAttribute("aria-current", "true");
       else el.removeAttribute("aria-current");
@@ -84,36 +86,13 @@
     });
   };
 
-  const setFocusWatch = (n) => {
-    slides.forEach((el, i) => {
-      const img = el.querySelector(".slide-watch");
-      if (img) img.style.viewTransitionName = i === n ? "hl-focus" : "none";
-    });
-  };
-
   const goSlide = (next) => {
     const total = slides.length;
-    if (!total || sliderBusy) return;
+    if (!total) return;
     const dest = (next + total) % total;
     if (dest === index) return;
-    const apply = () => {
-      index = dest;
-      paintSlides();
-    };
-    if (reduce || typeof document.startViewTransition !== "function") {
-      apply();
-      return;
-    }
-    setFocusWatch(dest);
-    sliderBusy = true;
-    slider?.classList.add("is-busy");
-    document
-      .startViewTransition(apply)
-      .finished.finally(() => {
-        setFocusWatch(-1);
-        sliderBusy = false;
-        slider?.classList.remove("is-busy");
-      });
+    index = dest;
+    paintSlides();
   };
 
   const stepSlider = (dir) => goSlide(index + dir);
@@ -148,6 +127,7 @@
       if (!dragging) return;
       dragging = false;
       slider.classList.remove("is-dragging");
+      slider.style.setProperty("--drag", "0px");
       if (dragX < -48) stepSlider(1);
       else if (dragX > 48) stepSlider(-1);
       dragX = 0;
@@ -160,11 +140,13 @@
       startX = event.clientX;
       dragX = 0;
       slider.classList.add("is-dragging");
+      slider.style.setProperty("--drag", "0px");
       slider.setPointerCapture(event.pointerId);
     });
     slider.addEventListener("pointermove", (event) => {
       if (!dragging) return;
       dragX = event.clientX - startX;
+      slider.style.setProperty("--drag", `${dragX}px`);
       if (Math.abs(dragX) > 12) dragged = true;
     });
     slider.addEventListener("pointerup", endDrag);
