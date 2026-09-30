@@ -642,7 +642,7 @@ a {
 }
 
 .promises {
-  background: var(--mist);
+  background: var(--paper);
   padding: var(--space-6) var(--pad);
   padding-right: var(--pad-r);
 }
@@ -1141,7 +1141,7 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--tile);
-  padding: 0 var(--pad) calc(var(--section) + var(--space-5));
+  padding: 0 var(--pad);
   padding-right: var(--pad-r);
 }
 
@@ -1641,15 +1641,60 @@ a {
 .house-copy {
   position: relative;
   z-index: 1;
+  isolation: isolate;
   width: calc(100% - 2.3rem);
   max-width: 26.75rem;
   margin: -4.25rem auto 0;
-  padding: 1.4rem 1.15rem 2.6rem;
+  padding: 1.85rem 1.45rem 2.75rem;
   background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.house-copy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+.house-copy::after {
+  content: "";
+  position: absolute;
+  inset: 0.7rem;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid var(--line);
+}
+
+.house-mark {
+  position: absolute;
+  top: 1.05rem;
+  right: 1.2rem;
+  z-index: 1;
+  font-size: clamp(3.25rem, 16vw, 4.75rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 0.75;
+  color: var(--ink);
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.house-copy h2,
+.house-copy > p,
+.house-voices {
+  position: relative;
+  z-index: 1;
 }
 
 .house-copy h2 {
   margin: 0 0 0.55rem;
+  padding-right: 3.25rem;
   font-weight: 400;
   letter-spacing: -0.04em;
   max-width: none;
@@ -2111,6 +2156,7 @@ a {
 
   .promises {
     padding: var(--space-7) var(--pad);
+    padding-right: var(--pad-r);
   }
 
   .promises ul {
@@ -2402,11 +2448,22 @@ a {
     width: auto;
     max-width: none;
     margin: 0;
-    padding: 4.25rem clamp(1.75rem, 4vw, 3.5rem) 4.5rem;
-    background: transparent;
+    padding: 4.5rem clamp(1.9rem, 4.2vw, 3.75rem) 4.75rem;
+    background: var(--paper);
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .house-copy::after {
+    inset: 1.35rem 1.5rem;
+  }
+
+  .house-mark {
+    top: 1.7rem;
+    right: 2rem;
+    font-size: clamp(5rem, 8vw, 7.5rem);
   }
 
   .house-copy h2 {
@@ -2599,7 +2656,7 @@ a {
     grid-template-columns: repeat(4, 1fr);
     overflow: visible;
     scroll-snap-type: none;
-    padding-bottom: var(--section);
+    padding-bottom: 0;
   }
 
   .edit-card:nth-child(3) {
