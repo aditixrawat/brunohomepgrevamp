@@ -190,7 +190,184 @@
     else menu.focus();
   };
 
-  const reveal = [...document.querySelectorAll(".origin, .banner, .highlights, .premium, .reviews, .house, .reels, .signup")];
+  const STORE = "https://www.brunomilano.com";
+
+  const rs = (value) => {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) return "";
+    return `Rs ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(amount)}`;
+  };
+
+  const sized = (src) => {
+    if (!src) return "";
+    const url = src.startsWith("//") ? `https:${src}` : src;
+    return `${url}${url.includes("?") ? "&" : "?"}width=900`;
+  };
+
+  const isWatch = (product) => {
+    const title = product.title || "";
+    const type = (product.product_type || "").toLowerCase();
+    if (/gift bag|apple band|strap|jewell?ery|ring watch/i.test(title)) return false;
+    return !type || type === "watch";
+  };
+
+  const skuSpec = (product) => {
+    const title = String(product.title || "");
+    const bits = [];
+    const mm = title.match(/(\d+)\s*mm/i);
+    if (mm) bits.push(`${mm[1]} MM`);
+    const shade = title.includes(" - ") ? title.split(" - ").pop().trim() : "";
+    if (shade && shade !== "Default Title") bits.push(shade);
+    return bits.join(" | ");
+  };
+
+  const distinctWatches = (products, count) => {
+    const seen = new Set();
+    const picked = [];
+    products.forEach((product) => {
+      const line = String(product.title || "").split(" - ")[0].trim().toLowerCase();
+      if (!line || seen.has(line) || picked.length >= count) return;
+      seen.add(line);
+      picked.push(product);
+    });
+    return picked.length ? picked : products.slice(0, count);
+  };
+
+  const skuLink = ({ href, image, title, spec, meta }) => {
+    const link = document.createElement("a");
+    link.className = "sku";
+    link.href = href;
+    const img = document.createElement("img");
+    img.src = image;
+    img.alt = title;
+    img.width = 900;
+    img.height = 900;
+    img.loading = "lazy";
+    img.decoding = "async";
+    const name = document.createElement("strong");
+    name.textContent = title;
+    link.append(img, name);
+    if (spec) {
+      const line = document.createElement("span");
+      line.className = "sku-spec";
+      line.textContent = spec;
+      link.append(line);
+    }
+    if (meta) {
+      const price = document.createElement("span");
+      price.className = "sku-price";
+      price.textContent = meta;
+      link.append(price);
+    }
+    return link;
+  };
+
+  const paintLoved = (rail, products) => {
+    rail.replaceChildren(
+      ...distinctWatches(products, 2).map((product) =>
+        skuLink({
+          href: `${STORE}/products/${product.handle}`,
+          image: sized(product.images?.[0]?.src),
+          title: product.title,
+          spec: skuSpec(product),
+          meta: rs(product.variants?.[0]?.price),
+        })
+      )
+    );
+    rail.setAttribute("aria-busy", "false");
+  };
+
+  const failRail = (name) => {
+    const rail = document.querySelector(`[data-rail="${name}"]`);
+    const note = document.querySelector(`[data-${name}-note]`);
+    if (rail) {
+      rail.replaceChildren();
+      rail.setAttribute("aria-busy", "false");
+    }
+    if (note) note.hidden = false;
+  };
+
+  const fetchCollectionProducts = async (handle) => {
+    const products = [];
+    for (let page = 1; page <= 20; page += 1) {
+      const response = await fetch(`${STORE}/collections/${handle}/products.json?limit=250&page=${page}`);
+      if (!response.ok) throw new Error(handle);
+      const batch = (await response.json()).products || [];
+      products.push(...batch);
+      if (batch.length < 250) break;
+    }
+    return products;
+  };
+
+  const loadArrivals = async () => {
+    const rail = document.querySelector('[data-rail="arrivals"]');
+    if (!rail) return;
+    try {
+      let fromCollection = "new-arrivals";
+      let products = [];
+      try {
+        products = await fetchCollectionProducts("new-arrivals");
+      } catch (error) {
+        products = [];
+      }
+      if (!products.length) {
+        fromCollection = "all";
+        products = await fetchCollectionProducts("all");
+      }
+      products = products.filter(isWatch);
+      if (fromCollection === "all") {
+        products.sort((a, b) =>
+          String(b.published_at || b.created_at || "").localeCompare(String(a.published_at || a.created_at || ""))
+        );
+      }
+      if (!products.length) throw new Error("empty");
+      paintLoved(rail, products);
+    } catch (error) {
+      failRail("arrivals");
+    }
+  };
+
+  const loadSellers = async () => {
+    const rail = document.querySelector('[data-rail="sellers"]');
+    if (!rail) return;
+    try {
+      const products = (await fetchCollectionProducts("best-sellers")).filter(isWatch);
+      if (!products.length) throw new Error("empty");
+      paintLoved(rail, products);
+    } catch (error) {
+      failRail("sellers");
+    }
+  };
+
+  loadArrivals();
+  loadSellers();
+
+  const stepRail = (name, dir) => {
+    const rail = document.querySelector(`[data-rail="${name}"]`);
+    if (!rail) return;
+    const card = rail.querySelector(".sku");
+    const styles = getComputedStyle(rail);
+    const gap = parseFloat(styles.columnGap || styles.gap) || 14;
+    const width = card ? card.getBoundingClientRect().width + gap : rail.clientWidth * 0.8;
+    rail.scrollBy({ left: dir * width, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  document.querySelectorAll("[data-rail-prev], [data-rail-next]").forEach((button) => {
+    const name = button.getAttribute("data-rail-prev") || button.getAttribute("data-rail-next");
+    const dir = button.hasAttribute("data-rail-next") ? 1 : -1;
+    button.addEventListener("click", () => stepRail(name, dir));
+  });
+
+  document.querySelectorAll("[data-rail]").forEach((rail) => {
+    rail.addEventListener("keydown", (event) => {
+      const name = rail.getAttribute("data-rail");
+      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      event.preventDefault();
+      stepRail(name, event.key === "ArrowRight" ? 1 : -1);
+    });
+  });
+
+  const reveal = [...document.querySelectorAll(".origin, .loved, .faces, .split, .banner, .highlights, .premium, .reviews, .house, .reels, .signup")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {
@@ -229,7 +406,7 @@
     }
   });
 
-  const faces = ["sora", "outfit", "manrope", "figtree", "jakarta"];
+  const faces = ["sora", "outfit", "syne", "onest", "urbanist", "archivo", "familjen"];
   const faceSelects = [...document.querySelectorAll("[data-face-select]")];
   const applyFace = window.applyBrunoFace || ((value) => {
     const face = faces.includes(value) ? value : "sora";

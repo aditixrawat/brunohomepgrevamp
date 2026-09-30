@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <script>
       (function () {
-        var allowed = { sora: 1, outfit: 1, manrope: 1, figtree: 1, jakarta: 1 };
+        var allowed = { sora: 1, outfit: 1, syne: 1, onest: 1, urbanist: 1, archivo: 1, familjen: 1 };
         window.applyBrunoFace = function (face) {
           if (!allowed[face]) face = "sora";
           document.documentElement.setAttribute("data-face", face);
@@ -28,8 +28,14 @@
       content="Premium fashion watches for men and women. Japanese quartz, sapphire-coated glass, 1-year warranty, and free shipping across India."
     />
     <link rel="icon" href="assets/logo.png" type="image/png" />
-    <link rel="preload" as="image" href="assets/craft.jpg" />
-    <link rel="stylesheet" href="css/site.css?v=banner-end" />
+    <link rel="preload" as="image" href="assets/craft.jpg" media="(max-width: 767px)" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747430833-fauc4.jpg?v=1790747433"
+      media="(min-width: 768px)"
+    />
+    <link rel="stylesheet" href="css/site.css?v=split-space" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -37,12 +43,14 @@
     <div class="type-dock">
       <label class="type-switch">
         <span>Type</span>
-        <select data-face-select onchange="applyBrunoFace(this.value)">
+        <select data-face-select aria-label="Typeface" onchange="applyBrunoFace(this.value)">
           <option value="sora">Sora</option>
           <option value="outfit">Outfit</option>
-          <option value="manrope">Manrope</option>
-          <option value="figtree">Figtree</option>
-          <option value="jakarta">Jakarta</option>
+          <option value="syne">Syne</option>
+          <option value="onest">Onest</option>
+          <option value="urbanist">Urbanist</option>
+          <option value="archivo">Archivo</option>
+          <option value="familjen">Familjen</option>
         </select>
       </label>
     </div>
@@ -128,47 +136,45 @@
             />
           </div>
           <div class="hero-veil"></div>
+          <img
+            class="hero-banner hero-banner-m"
+            src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747658602-xp43u.jpg?v=1790747661"
+            alt=""
+            width="2048"
+            height="2048"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <img
+            class="hero-banner hero-banner-d"
+            src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747430833-fauc4.jpg?v=1790747433"
+            alt=""
+            width="2048"
+            height="1152"
+            decoding="async"
+          />
         </div>
         <div class="hero-copy">
-          <h1>A watch for the outfit.</h1>
-          <p>Premium fashion watches. Japanese quartz. Free shipping in India.</p>
+          <h1>How you wear time.</h1>
+          <p>Not just what you wear. Free shipping in India.</p>
           <a class="btn btn-light" href="https://www.brunomilano.com/collections/all">Shop watches</a>
         </div>
       </section>
 
       <section class="origin" aria-labelledby="origin-title">
         <div class="origin-copy">
-          <h2 id="origin-title">Made to watch.</h2>
+          <h2 id="origin-title">Made to be worn.</h2>
           <p>
-            Bruno Milano is a 2024 fashion-watch brand. Colorways, steel, and Japanese quartz you actually wear out.
-            Rachit tries every design on his own wrist. Saurabh runs product from the factory floor. Thirty years of
-            making fashion watches, none of the vault talk.
+            Bruno Milano is for the outfit you already have. A 2024 fashion-watch brand. Rachit tries every design
+            on his own wrist. Saurabh runs product from the factory floor. Thirty years of making fashion watches,
+            none of the vault talk.
           </p>
         </div>
-        <figure class="origin-watch">
-          <img
-            src="assets/doppio-cut.png"
-            alt="Doppio Chrono"
-            width="800"
-            height="800"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
       </section>
-
-      <aside class="banner banner-mid" aria-label="Shop the collection">
-        <img src="assets/craft.jpg" alt="" width="1800" height="1800" loading="lazy" decoding="async" />
-        <div class="banner-copy">
-          <h2>Shop the looks.</h2>
-          <p>Best sellers, steel, and new colorways.</p>
-          <a class="btn btn-light" href="https://www.brunomilano.com/collections/best-sellers">Shop watches</a>
-        </div>
-      </aside>
 
       <section class="highlights" id="highlights" aria-labelledby="highlights-title">
         <div class="highlights-bar">
-          <h2 id="highlights-title">The lineup</h2>
+          <h2 id="highlights-title" class="vh">The lineup</h2>
           <div class="highlights-controls">
             <button type="button" data-prev aria-label="Previous highlight" aria-controls="highlights-stage">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
@@ -236,17 +242,94 @@
         </div>
       </section>
 
-      <aside class="banner banner-mid" aria-label="Shop stainless steel">
-        <img src="assets/detail-wrist.jpg" alt="" width="1800" height="1800" loading="lazy" decoding="async" />
+      <section class="loved arrivals" aria-labelledby="arrivals-title">
+        <a class="loved-promo" href="https://www.brunomilano.com/collections/new-arrivals">
+          <div class="loved-media"></div>
+          <div class="loved-copy">
+            <h2>Just dropped.</h2>
+            <span class="btn btn-light">Shop now →</span>
+          </div>
+        </a>
+        <div class="loved-board">
+          <h2 id="arrivals-title">New arrivals</h2>
+          <div class="loved-grid" data-rail="arrivals" aria-busy="true" aria-label="New arrivals">
+            <span class="sku-wait"></span>
+            <span class="sku-wait"></span>
+          </div>
+          <p class="shelf-note" data-arrivals-note hidden>
+            New arrivals did not load.
+            <a href="https://www.brunomilano.com/collections/all">Shop watches</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="split" aria-label="Men and women">
+        <a class="split-panel" href="https://www.brunomilano.com/collections/mens-watches">
+          <img src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790683495313-etxxb.jpg?v=1790683498" alt="" width="2048" height="2048" loading="lazy" decoding="async" />
+          <span>
+            <strong>Men</strong>
+            <em>For the night out.</em>
+          </span>
+        </a>
+        <a class="split-panel" href="https://www.brunomilano.com/collections/womens-watches">
+          <img src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790683112553-l2a3z.jpg?v=1790683116" alt="" width="2048" height="2048" loading="lazy" decoding="async" />
+          <span>
+            <strong>Women</strong>
+            <em>For the day ahead.</em>
+          </span>
+        </a>
+      </section>
+
+      <section class="loved sellers" aria-labelledby="sellers-title">
+        <a class="loved-promo" href="https://www.brunomilano.com/collections/best-sellers">
+          <div class="loved-media"></div>
+          <div class="loved-copy">
+            <h2>On repeat.</h2>
+            <span class="btn btn-light">Shop now →</span>
+          </div>
+        </a>
+        <div class="loved-board">
+          <h2 id="sellers-title">Best sellers</h2>
+          <div class="loved-grid" data-rail="sellers" aria-busy="true" aria-label="Best sellers">
+            <span class="sku-wait"></span>
+            <span class="sku-wait"></span>
+          </div>
+          <p class="shelf-note" data-sellers-note hidden>
+            Best sellers did not load.
+            <a href="https://www.brunomilano.com/collections/best-sellers">Shop best sellers</a>
+          </p>
+        </div>
+      </section>
+
+      <section class="faces" aria-labelledby="faces-title">
+        <h2 id="faces-title">Where it gets worn.</h2>
+        <div class="faces-row">
+          <a class="face" href="https://www.brunomilano.com/collections/womens-watches">
+            <img src="assets/review-life-menta.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+            <span>The Everyday</span>
+          </a>
+          <a class="face" href="https://www.brunomilano.com/collections/mens-watches">
+            <img src="assets/review-sanket.jpg" alt="" width="1024" height="1280" loading="lazy" decoding="async" />
+            <span>After Hours</span>
+          </a>
+          <a class="face" href="https://www.brunomilano.com/collections/ambrosiana-chic">
+            <img src="assets/ambrosiana-mood.jpg" alt="" width="1600" height="1600" loading="lazy" decoding="async" />
+            <span>The Occasion</span>
+          </a>
+        </div>
+      </section>
+
+      <aside class="banner banner-mid" aria-label="Shop the collection">
+        <img src="assets/craft.jpg" alt="" width="1800" height="1800" loading="lazy" decoding="async" />
         <div class="banner-copy">
-          <h2>The steel line.</h2>
-          <p>41 mm. Leather strap. Sapphire-coated glass. From Rs 4,499.</p>
-          <a class="btn btn-light" href="https://www.brunomilano.com/collections/radiante-heritage">Shop Radiante</a>
+          <h2>Time is a personal statement.</h2>
+          <p>From the first coffee to the last train.</p>
+          <a class="btn btn-light" href="https://www.brunomilano.com/collections/best-sellers">Shop the look</a>
         </div>
       </aside>
 
       <section class="premium" aria-labelledby="radiante-title">
-        <h2 id="radiante-title">Radiante Heritage</h2>
+        <h2 id="radiante-title">Two ways to wear it.</h2>
         <div class="premium-pair">
           <a class="premium-watch" href="https://www.brunomilano.com/products/radiante-heritage-nero">
             <img
@@ -319,8 +402,8 @@
 
       <section class="reels" aria-labelledby="reels-title">
         <div class="reels-head">
-          <h2 id="reels-title">On the wrist</h2>
-          <p>How they land. @brunomilanowatches</p>
+          <h2 id="reels-title">Worn your way.</h2>
+          <p>@brunomilanowatches</p>
         </div>
         <div class="reels-wrap">
           <button class="reels-nav" type="button" data-reel-prev aria-label="Previous stories">
@@ -505,7 +588,7 @@
       <img src="assets/craft.jpg" alt="" width="1800" height="1800" loading="lazy" decoding="async" />
       <div class="banner-copy">
         <h2>Put one on.</h2>
-        <p>Fashion watches. Free shipping in India.</p>
+        <p>Free shipping in India.</p>
         <a class="btn btn-light" href="https://www.brunomilano.com/collections/all">Shop watches</a>
       </div>
     </aside>
@@ -513,7 +596,7 @@
     <footer class="foot">
       <div>
         <strong>Bruno Milano</strong>
-        <p>Fashion watches you can play with an outfit.</p>
+        <p>Not just what you wear. How you wear time.</p>
       </div>
       <nav aria-label="Footer">
         <a href="https://www.brunomilano.com/collections/all">Shop watches</a>
@@ -525,6 +608,6 @@
       <p class="legal">Prototype homepage. Drop a lifestyle film at assets/hero-lifestyle.mp4 to replace the stills.</p>
     </footer>
 
-    <script src="js/site.js?v=face2" defer></script>
+    <script src="js/site.js?v=loved-2up" defer></script>
   </body>
 </html>
