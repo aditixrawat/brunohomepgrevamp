@@ -156,11 +156,6 @@
     stopHighlightAuto();
     highlightAuto?.io?.disconnect();
 
-    if (desktopView.matches) {
-      highlightAuto = null;
-      return;
-    }
-
     const tick = () => {
       if (document.hidden) return;
       stepSlider(1);
@@ -208,8 +203,12 @@
 
   paintSlides();
   attachHighlightAuto();
-  prev?.addEventListener("click", () => stepSlider(-1));
-  next?.addEventListener("click", () => stepSlider(1));
+  const nudgeHighlight = (dir) => {
+    stepSlider(dir);
+    highlightAuto?.pause?.(true);
+  };
+  prev?.addEventListener("click", () => nudgeHighlight(-1));
+  next?.addEventListener("click", () => nudgeHighlight(1));
   slider?.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") stepSlider(1);
     if (event.key === "ArrowLeft") stepSlider(-1);
@@ -533,7 +532,7 @@
     });
   });
 
-  const reveal = [...document.querySelectorAll(".origin, .loved, .edit, .split, .highlights, .reviews, .house, .reels, .signup")];
+  const reveal = [...document.querySelectorAll(".origin, .promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .signup")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {

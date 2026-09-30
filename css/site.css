@@ -148,7 +148,7 @@ body {
   letter-spacing: -0.011em;
   font-size: 1rem;
   caret-color: var(--steel);
-  padding-bottom: calc(var(--dock) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 body.is-locked {
@@ -362,11 +362,11 @@ a {
 
 .type-dock {
   position: fixed;
-  top: auto;
-  right: auto;
-  left: var(--pad);
-  bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
-  z-index: 8;
+  top: calc(var(--nav) + 0.4rem);
+  right: var(--pad-r);
+  left: auto;
+  bottom: auto;
+  z-index: 12;
 }
 
 .type-switch {
@@ -619,11 +619,13 @@ a {
 }
 
 .origin,
+.promises,
 .shelf,
 .loved,
 .faces,
 .edit,
 .split,
+.view,
 .highlights,
 .reviews,
 .house,
@@ -637,6 +639,50 @@ a {
   z-index: 1;
   margin-block: 0;
   background: var(--paper);
+}
+
+.promises {
+  background: var(--mist);
+  padding: var(--space-6) var(--pad);
+  padding-right: var(--pad-r);
+}
+
+.promises ul {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  margin: 0 auto;
+  padding: 0;
+  max-width: 68rem;
+}
+
+.promises li {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.65rem;
+}
+
+.promises svg {
+  width: 2.15rem;
+  height: 2.15rem;
+  color: var(--ink);
+}
+
+.promises strong {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.promises span {
+  max-width: 18ch;
+  color: var(--mute);
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 .origin-copy {
@@ -1095,7 +1141,7 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--tile);
-  padding: 0 var(--pad) var(--section);
+  padding: 0 var(--pad) calc(var(--section) + var(--space-5));
   padding-right: var(--pad-r);
 }
 
@@ -1276,8 +1322,45 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--tile);
-  padding: var(--section) var(--pad);
+  padding: var(--section) var(--pad) var(--space-5);
   padding-right: var(--pad-r);
+}
+
+.view {
+  background: var(--paper);
+  padding: var(--space-5) var(--pad) var(--section);
+  padding-right: var(--pad-r);
+}
+
+.view-copy {
+  max-width: 32rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.view-kicker {
+  margin: 0 0 var(--space-2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.view-lead h2 {
+  margin: 0 auto var(--space-3);
+  max-width: 16ch;
+  font-size: clamp(1.85rem, 7.4vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.12;
+}
+
+.view-lead p {
+  margin: 0 auto;
+  max-width: 32ch;
+  color: var(--mute);
+  line-height: 1.5;
 }
 
 .highlights {
@@ -2026,6 +2109,15 @@ a {
     padding: var(--section) var(--pad) var(--space-6);
   }
 
+  .promises {
+    padding: var(--space-7) var(--pad);
+  }
+
+  .promises ul {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-6);
+  }
+
   .origin-copy h2 {
     margin: 0 auto var(--space-4);
     max-width: none;
@@ -2063,7 +2155,31 @@ a {
   }
 
   .highlights {
+    position: relative;
     padding: var(--space-6) 0 calc(var(--section) + 5.5rem);
+  }
+
+  .highlights-bar {
+    position: absolute;
+    top: var(--space-6);
+    left: 0;
+    right: 0;
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 68vh;
+    min-height: 32rem;
+    padding: 0 clamp(0.35rem, 1.4vw, 1.15rem);
+    pointer-events: none;
+  }
+
+  .highlights-controls {
+    display: contents;
+  }
+
+  .highlights-controls button {
+    pointer-events: auto;
   }
 
   .loved-track {
@@ -2136,13 +2252,10 @@ a {
   }
 
   .highlights {
+    position: relative;
     overflow-x: clip;
     overflow-y: visible;
     padding: var(--space-6) 0 calc(var(--section) + 5.5rem);
-  }
-
-  .highlights-bar {
-    padding: 0;
   }
 
   .highlights-bar h2 {
@@ -2341,6 +2454,24 @@ a {
     grid-template-columns: 1fr 1fr;
   }
 
+  .view {
+    padding: var(--space-7) var(--pad);
+  }
+
+  .view-copy {
+    max-width: 36rem;
+  }
+
+  .view-lead h2 {
+    max-width: 18ch;
+    font-size: clamp(2rem, 2.8vw, 2.55rem);
+  }
+
+  .view-lead p {
+    max-width: 38ch;
+    font-size: 1.0625rem;
+  }
+
   .edit-head h2 {
     font-size: clamp(2.3rem, 4.6vw, 3.5rem);
   }
@@ -2469,6 +2600,14 @@ a {
     overflow: visible;
     scroll-snap-type: none;
     padding-bottom: var(--section);
+  }
+
+  .edit-card:nth-child(3) {
+    order: 4;
+  }
+
+  .edit-card:nth-child(4) {
+    order: 3;
   }
 
   .edit-card {
