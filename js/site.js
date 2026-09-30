@@ -384,7 +384,7 @@
     });
   });
 
-  const reveal = [...document.querySelectorAll(".origin, .loved, .edit, .split, .banner, .highlights, .reviews, .house, .reels, .signup")];
+  const reveal = [...document.querySelectorAll(".origin, .loved, .edit, .split, .highlights, .reviews, .house, .reels, .signup")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {
@@ -459,4 +459,106 @@
     true
   );
   email?.addEventListener("input", () => showHint(false));
+
+  const sequence = document.getElementById("sequence-section");
+  const seqCanvas = document.getElementById("sequence-canvas");
+  if (sequence && seqCanvas) {
+    const ctx = seqCanvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    const mobile = window.innerWidth <= 900;
+    const frameCount = mobile ? 192 : 238;
+    const imageCache = {};
+    let currentFrame = 0;
+    let targetFrame = 0;
+    let animationRunning = false;
+    const buyBtn = sequence.querySelector(".sequence-buy-btn");
+    const seqText = sequence.querySelector(".bmvidtext");
+
+    const getFrameUrl = (index) =>
+      mobile
+        ? `https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Sequence_${String(1000 + index).padStart(5, "0")}.jpg`
+        : `https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Sequence_03_${1000 + index}.jpg`;
+
+    const drawImage = (index) => {
+      const img = imageCache[index];
+      if (!img || !img.complete || !img.naturalWidth) return;
+      const viewWidth = window.innerWidth;
+      const viewHeight = window.innerHeight;
+      ctx.clearRect(0, 0, viewWidth, viewHeight);
+      const scale = Math.max(viewWidth / img.width, viewHeight / img.height);
+      const width = img.width * scale;
+      const height = img.height * scale;
+      ctx.drawImage(img, (viewWidth - width) / 2, (viewHeight - height) / 2, width, height);
+    };
+
+    const resizeCanvas = () => {
+      const dpr = window.devicePixelRatio || 1;
+      seqCanvas.width = window.innerWidth * dpr;
+      seqCanvas.height = window.innerHeight * dpr;
+      seqCanvas.style.width = `${window.innerWidth}px`;
+      seqCanvas.style.height = `${window.innerHeight}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawImage(Math.round(currentFrame));
+    };
+
+    const preloadImages = () => {
+      for (let i = 0; i < frameCount; i += 1) {
+        const img = new Image();
+        img.onload = () => {
+          if (i === 0) resizeCanvas();
+        };
+        img.src = getFrameUrl(i);
+        imageCache[i] = img;
+      }
+    };
+
+    const animateFrames = () => {
+      currentFrame += (targetFrame - currentFrame) * 0.08;
+      if (Math.abs(targetFrame - currentFrame) < 0.1) {
+        currentFrame = targetFrame;
+        animationRunning = false;
+      } else {
+        requestAnimationFrame(animateFrames);
+      }
+      drawImage(Math.round(currentFrame));
+    };
+
+    const updateSequence = () => {
+      const rect = sequence.getBoundingClientRect();
+      const scrollable = sequence.offsetHeight - window.innerHeight;
+      let progress = -rect.top / scrollable;
+      progress = Math.max(0, Math.min(1, progress));
+      const buyBtnHidePoint = window.innerHeight * 0.6;
+      const textHidePoint = window.innerHeight * 0.8;
+      if (progress > 0.15 && rect.bottom > buyBtnHidePoint) buyBtn?.classList.add("show");
+      else buyBtn?.classList.remove("show");
+      if (progress > 0.08 && rect.bottom > textHidePoint) seqText?.classList.add("show");
+      else seqText?.classList.remove("show");
+      if (reduce) {
+        currentFrame = 0;
+        drawImage(0);
+        return;
+      }
+      targetFrame = progress * (frameCount - 1);
+      if (!animationRunning) {
+        animationRunning = true;
+        requestAnimationFrame(animateFrames);
+      }
+    };
+
+    preloadImages();
+    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("scroll", updateSequence, { passive: true });
+    window.addEventListener("load", resizeCanvas);
+    updateSequence();
+
+    if (nav) {
+      const seqWatch = new IntersectionObserver(
+        ([entry]) => nav.classList.toggle("is-seq", entry.isIntersecting),
+        { threshold: 0.12 }
+      );
+      seqWatch.observe(sequence);
+    }
+  }
 })();
