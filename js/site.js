@@ -221,18 +221,6 @@
     return bits.join(" | ");
   };
 
-  const distinctWatches = (products, count) => {
-    const seen = new Set();
-    const picked = [];
-    products.forEach((product) => {
-      const line = String(product.title || "").split(" - ")[0].trim().toLowerCase();
-      if (!line || seen.has(line) || picked.length >= count) return;
-      seen.add(line);
-      picked.push(product);
-    });
-    return picked.length ? picked : products.slice(0, count);
-  };
-
   const skuLink = ({ href, image, title, spec, meta }) => {
     const link = document.createElement("a");
     link.className = "sku";
@@ -263,8 +251,9 @@
   };
 
   const paintLoved = (rail, products) => {
-    rail.replaceChildren(
-      ...distinctWatches(products, 2).map((product) =>
+    const grid = rail.querySelector(".loved-grid") || rail;
+    grid.replaceChildren(
+      ...products.map((product) =>
         skuLink({
           href: `${STORE}/products/${product.handle}`,
           image: sized(product.images?.[0]?.src),
@@ -280,10 +269,11 @@
   const failRail = (name) => {
     const rail = document.querySelector(`[data-rail="${name}"]`);
     const note = document.querySelector(`[data-${name}-note]`);
-    if (rail) {
-      rail.replaceChildren();
-      rail.setAttribute("aria-busy", "false");
+    const grid = rail?.querySelector(".loved-grid") || rail;
+    if (grid) {
+      grid.replaceChildren();
     }
+    if (rail) rail.setAttribute("aria-busy", "false");
     if (note) note.hidden = false;
   };
 
@@ -342,14 +332,41 @@
   loadArrivals();
   loadSellers();
 
+  const railScroller = (rail) => {
+    if (!rail) return null;
+    if (window.matchMedia("(min-width: 768px)").matches) {
+      return rail.querySelector(".loved-grid") || rail;
+    }
+    return rail;
+  };
+
   const stepRail = (name, dir) => {
     const rail = document.querySelector(`[data-rail="${name}"]`);
-    if (!rail) return;
-    const card = rail.querySelector(".sku");
-    const styles = getComputedStyle(rail);
+    const scroller = railScroller(rail);
+    if (!scroller) return;
+    const kids = [...(scroller === rail ? rail.children : scroller.children)].filter((el) =>
+      el.matches(".loved-promo, .sku, .sku-wait")
+    );
+    if (scroller === rail) {
+      const nested = [...rail.querySelectorAll(".loved-promo, .sku, .col-card")];
+      const x = scroller.scrollLeft;
+      const points = nested.length ? nested : kids;
+      const origin = points[0] ? points[0].offsetLeft : 0;
+      const next =
+        dir > 0
+          ? points.find((el) => el.offsetLeft > x + origin + 12)
+          : [...points].reverse().find((el) => el.offsetLeft < x - 12);
+      const target = next || points[dir > 0 ? points.length - 1 : 0];
+      if (target) {
+        scroller.scrollTo({ left: target.offsetLeft, behavior: reduce ? "auto" : "smooth" });
+      }
+      return;
+    }
+    const card = scroller.querySelector(".sku, .col-card");
+    const styles = getComputedStyle(scroller);
     const gap = parseFloat(styles.columnGap || styles.gap) || 14;
-    const width = card ? card.getBoundingClientRect().width + gap : rail.clientWidth * 0.8;
-    rail.scrollBy({ left: dir * width, behavior: reduce ? "auto" : "smooth" });
+    const width = card ? card.getBoundingClientRect().width + gap : scroller.clientWidth * 0.8;
+    scroller.scrollBy({ left: dir * width, behavior: reduce ? "auto" : "smooth" });
   };
 
   document.querySelectorAll("[data-rail-prev], [data-rail-next]").forEach((button) => {
@@ -367,7 +384,7 @@
     });
   });
 
-  const reveal = [...document.querySelectorAll(".origin, .loved, .faces, .split, .banner, .highlights, .premium, .reviews, .house, .reels, .signup")];
+  const reveal = [...document.querySelectorAll(".origin, .loved, .edit, .split, .banner, .highlights, .reviews, .house, .reels, .signup")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {

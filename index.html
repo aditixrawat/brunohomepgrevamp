@@ -35,7 +35,7 @@
       href="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747430833-fauc4.jpg?v=1790747433"
       media="(min-width: 768px)"
     />
-    <link rel="stylesheet" href="css/site.css?v=split-space" />
+    <link rel="stylesheet" href="css/site.css?v=edit6" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -155,9 +155,15 @@
           />
         </div>
         <div class="hero-copy">
-          <h1>How you wear time.</h1>
-          <p>Not just what you wear. Free shipping in India.</p>
-          <a class="btn btn-light" href="https://www.brunomilano.com/collections/all">Shop watches</a>
+          <div class="hero-lead">
+            <p class="hero-kicker">Bruno Milano · Modern Italian spirit</p>
+            <h1>Time, styled your way.</h1>
+            <p>Sharp lines. Soft swagger. Watches for work, weekends and whatever happens after.</p>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-light" href="https://www.brunomilano.com/collections/mens-watches">Shop men</a>
+            <a class="btn btn-ghost" href="https://www.brunomilano.com/collections/womens-watches">Shop women</a>
+          </div>
         </div>
       </section>
 
@@ -243,24 +249,40 @@
       </section>
 
       <section class="loved arrivals" aria-labelledby="arrivals-title">
-        <a class="loved-promo" href="https://www.brunomilano.com/collections/new-arrivals">
-          <div class="loved-media"></div>
-          <div class="loved-copy">
-            <h2>Just dropped.</h2>
-            <span class="btn btn-light">Shop now →</span>
-          </div>
-        </a>
-        <div class="loved-board">
+        <div class="loved-head">
           <h2 id="arrivals-title">New arrivals</h2>
-          <div class="loved-grid" data-rail="arrivals" aria-busy="true" aria-label="New arrivals">
+          <div class="shelf-controls">
+            <button type="button" data-rail-prev="arrivals" aria-label="Previous arrivals">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
+              </svg>
+            </button>
+            <button type="button" data-rail-next="arrivals" aria-label="Next arrivals">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="loved-track" data-rail="arrivals" tabindex="0" aria-busy="true" aria-label="New arrivals">
+          <a class="loved-promo" href="https://www.brunomilano.com/collections/new-arrivals">
+            <div class="loved-media">
+              <img src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790752873935-yuv5c.jpg?v=1790752877" alt="" width="2048" height="2048" loading="lazy" decoding="async" />
+            </div>
+            <div class="loved-copy">
+              <h2>Just dropped.</h2>
+              <span class="btn btn-light">Shop now →</span>
+            </div>
+          </a>
+          <div class="loved-grid">
             <span class="sku-wait"></span>
             <span class="sku-wait"></span>
           </div>
-          <p class="shelf-note" data-arrivals-note hidden>
-            New arrivals did not load.
-            <a href="https://www.brunomilano.com/collections/all">Shop watches</a>
-          </p>
         </div>
+        <p class="shelf-note" data-arrivals-note hidden>
+          New arrivals did not load.
+          <a href="https://www.brunomilano.com/collections/all">Shop watches</a>
+        </p>
       </section>
 
       <section class="split" aria-label="Men and women">
@@ -281,83 +303,82 @@
       </section>
 
       <section class="loved sellers" aria-labelledby="sellers-title">
-        <a class="loved-promo" href="https://www.brunomilano.com/collections/best-sellers">
-          <div class="loved-media"></div>
-          <div class="loved-copy">
-            <h2>On repeat.</h2>
-            <span class="btn btn-light">Shop now →</span>
-          </div>
-        </a>
-        <div class="loved-board">
+        <div class="loved-head">
           <h2 id="sellers-title">Best sellers</h2>
-          <div class="loved-grid" data-rail="sellers" aria-busy="true" aria-label="Best sellers">
+          <div class="shelf-controls">
+            <button type="button" data-rail-prev="sellers" aria-label="Previous best sellers">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
+              </svg>
+            </button>
+            <button type="button" data-rail-next="sellers" aria-label="Next best sellers">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="loved-track" data-rail="sellers" tabindex="0" aria-busy="true" aria-label="Best sellers">
+          <a class="loved-promo" href="https://www.brunomilano.com/collections/best-sellers">
+            <div class="loved-media">
+              <img src="assets/on-repeat.jpg" alt="" width="1024" height="768" loading="lazy" decoding="async" />
+            </div>
+            <div class="loved-copy">
+              <h2>On repeat.</h2>
+              <span class="btn btn-light">Shop now →</span>
+            </div>
+          </a>
+          <div class="loved-grid">
             <span class="sku-wait"></span>
             <span class="sku-wait"></span>
           </div>
-          <p class="shelf-note" data-sellers-note hidden>
-            Best sellers did not load.
-            <a href="https://www.brunomilano.com/collections/best-sellers">Shop best sellers</a>
-          </p>
         </div>
+        <p class="shelf-note" data-sellers-note hidden>
+          Best sellers did not load.
+          <a href="https://www.brunomilano.com/collections/best-sellers">Shop best sellers</a>
+        </p>
       </section>
 
-      <section class="faces" aria-labelledby="faces-title">
-        <h2 id="faces-title">Where it gets worn.</h2>
-        <div class="faces-row">
-          <a class="face" href="https://www.brunomilano.com/collections/womens-watches">
-            <img src="assets/review-life-menta.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
-            <span>The Everyday</span>
-          </a>
-          <a class="face" href="https://www.brunomilano.com/collections/mens-watches">
+      <section class="edit" aria-labelledby="edit-title">
+        <div class="edit-head">
+          <p class="edit-kicker">The lifestyle edit</p>
+          <h2 id="edit-title">More faces. More attitude.</h2>
+          <div class="edit-intro">
+            <p>
+              A sharper fashion story with distinct personalities for work hours, coffee stops, travel days and
+              after-dark plans.
+            </p>
+            <a href="https://www.brunomilano.com/collections/best-sellers">Shop the edit</a>
+          </div>
+        </div>
+        <div class="edit-grid">
+          <a class="edit-card" href="https://www.brunomilano.com/collections/mens-watches">
             <img src="assets/review-sanket.jpg" alt="" width="1024" height="1280" loading="lazy" decoding="async" />
-            <span>After Hours</span>
+            <div class="edit-card-copy">
+              <span>The 9 to 5</span>
+              <strong>On the steps.</strong>
+            </div>
           </a>
-          <a class="face" href="https://www.brunomilano.com/collections/ambrosiana-chic">
+          <a class="edit-card" href="https://www.brunomilano.com/collections/womens-watches">
+            <img src="assets/review-life-menta.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+            <div class="edit-card-copy">
+              <span>Coffee run</span>
+              <strong>Café charm.</strong>
+            </div>
+          </a>
+          <a class="edit-card" href="https://www.brunomilano.com/collections/stainless-steel">
+            <img src="assets/review-teal.jpg" alt="" width="1024" height="1280" loading="lazy" decoding="async" />
+            <div class="edit-card-copy">
+              <span>On the move</span>
+              <strong>Departures, styled.</strong>
+            </div>
+          </a>
+          <a class="edit-card" href="https://www.brunomilano.com/collections/ambrosiana-chic">
             <img src="assets/ambrosiana-mood.jpg" alt="" width="1600" height="1600" loading="lazy" decoding="async" />
-            <span>The Occasion</span>
-          </a>
-        </div>
-      </section>
-
-      <aside class="banner banner-mid" aria-label="Shop the collection">
-        <img src="assets/craft.jpg" alt="" width="1800" height="1800" loading="lazy" decoding="async" />
-        <div class="banner-copy">
-          <h2>Time is a personal statement.</h2>
-          <p>From the first coffee to the last train.</p>
-          <a class="btn btn-light" href="https://www.brunomilano.com/collections/best-sellers">Shop the look</a>
-        </div>
-      </aside>
-
-      <section class="premium" aria-labelledby="radiante-title">
-        <h2 id="radiante-title">Two ways to wear it.</h2>
-        <div class="premium-pair">
-          <a class="premium-watch" href="https://www.brunomilano.com/products/radiante-heritage-nero">
-            <img
-              src="assets/radiante-cut.png"
-              alt="Radiante Heritage Nero"
-              width="1285"
-              height="1600"
-              loading="lazy"
-              decoding="async"
-            />
-            <span class="premium-name">
-              <strong>Nero</strong>
-              <span>Shop</span>
-            </span>
-          </a>
-          <a class="premium-watch" href="https://www.brunomilano.com/products/radiante-heritage-blu">
-            <img
-              src="assets/radiante-blu-cut.png"
-              alt="Radiante Heritage Blu"
-              width="1284"
-              height="1600"
-              loading="lazy"
-              decoding="async"
-            />
-            <span class="premium-name">
-              <strong>Blu</strong>
-              <span>Shop</span>
-            </span>
+            <div class="edit-card-copy">
+              <span>After dark</span>
+              <strong>Night, handled.</strong>
+            </div>
           </a>
         </div>
       </section>
@@ -483,15 +504,6 @@
         </div>
         <ul>
           <li class="review">
-            <figure class="review-media">
-              <img
-                src="assets/review-life-steel.jpg"
-                alt=""
-                width="1024"
-                height="1024"
-                decoding="async"
-              />
-            </figure>
             <div class="review-body">
               <p class="review-stars" aria-label="5 out of 5">★★★★★</p>
               <blockquote>
@@ -505,15 +517,6 @@
             </div>
           </li>
           <li class="review">
-            <figure class="review-media">
-              <img
-                src="assets/review-life-menta.jpg"
-                alt=""
-                width="1024"
-                height="1024"
-                decoding="async"
-              />
-            </figure>
             <div class="review-body">
               <p class="review-stars" aria-label="5 out of 5">★★★★★</p>
               <blockquote>
@@ -527,15 +530,6 @@
             </div>
           </li>
           <li class="review">
-            <figure class="review-media">
-              <img
-                src="assets/review-teal.jpg"
-                alt=""
-                width="864"
-                height="1152"
-                decoding="async"
-              />
-            </figure>
             <div class="review-body">
               <p class="review-stars" aria-label="5 out of 5">★★★★★</p>
               <blockquote>
@@ -608,6 +602,6 @@
       <p class="legal">Prototype homepage. Drop a lifestyle film at assets/hero-lifestyle.mp4 to replace the stills.</p>
     </footer>
 
-    <script src="js/site.js?v=loved-2up" defer></script>
+    <script src="js/site.js?v=edit6" defer></script>
   </body>
 </html>
