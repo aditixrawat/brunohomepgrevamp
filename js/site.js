@@ -52,12 +52,15 @@
     navWatch.observe(hero);
   }
 
-  const slides = [...document.querySelectorAll(".slide")];
+  const slideEls = () => [...(slider?.querySelectorAll(".slide") || [])];
   let index = 0;
+  let highlightAuto = null;
+  const AUTO_MS = 3400;
 
   const slideName = (el) => el.querySelector("h3")?.textContent.trim() || "watch";
 
   const paintSlides = () => {
+    const slides = slideEls();
     const total = slides.length;
     if (!total) return;
     slides.forEach((el, n) => {
@@ -84,10 +87,11 @@
         el.removeAttribute("aria-label");
       }
     });
+    paintHighlightPager(Boolean(highlightAuto?.timer));
   };
 
   const goSlide = (next) => {
-    const total = slides.length;
+    const total = slideEls().length;
     if (!total) return;
     const dest = (next + total) % total;
     if (dest === index) return;
@@ -97,25 +101,134 @@
 
   const stepSlider = (dir) => goSlide(index + dir);
 
+  const setPagerPlaying = (playing) => {
+    const toggle = document.querySelector('[data-pager-toggle="highlights"]');
+    if (!toggle) return;
+    toggle.classList.toggle("is-paused", !playing);
+    toggle.setAttribute("aria-pressed", String(!playing));
+    toggle.setAttribute("aria-label", playing ? "Pause auto-scroll" : "Play auto-scroll");
+  };
+
+  const paintHighlightPager = (playing) => {
+    const pips = document.querySelector('[data-pager-pips="highlights"]');
+    if (!pips) return;
+    const slides = slideEls();
+    const pages = Math.min(8, slides.length);
+    if (!pages) {
+      pips.replaceChildren();
+      return;
+    }
+    const current = pages <= 1 ? 0 : Math.round((index / Math.max(1, slides.length - 1)) * (pages - 1));
+    pips.replaceChildren(
+      ...Array.from({ length: pages }, (_, i) => {
+        const pip = document.createElement("button");
+        pip.type = "button";
+        pip.className = "rail-pager-pip";
+        pip.setAttribute("aria-label", `Go to watch ${i + 1}`);
+        if (i === current) {
+          pip.classList.add("is-on");
+          if (playing) pip.classList.add("is-playing");
+          pip.append(document.createElement("i"));
+        }
+        pip.addEventListener("click", () => {
+          const dest = pages <= 1 ? 0 : Math.round((i / (pages - 1)) * (slides.length - 1));
+          goSlide(dest);
+          if (highlightAuto?.playing) highlightAuto.restart?.();
+          else paintHighlightPager(false);
+        });
+        return pip;
+      })
+    );
+  };
+
+  const stopHighlightAuto = () => {
+    if (!highlightAuto) return;
+    if (highlightAuto.timer) window.clearInterval(highlightAuto.timer);
+    if (highlightAuto.resume) window.clearTimeout(highlightAuto.resume);
+    highlightAuto.timer = 0;
+    highlightAuto.resume = 0;
+  };
+
+  const desktopView = window.matchMedia("(min-width: 768px)");
+
+  const attachHighlightAuto = () => {
+    if (!slider) return;
+    stopHighlightAuto();
+    highlightAuto?.io?.disconnect();
+
+    if (desktopView.matches) {
+      highlightAuto = null;
+      return;
+    }
+
+    const tick = () => {
+      if (document.hidden) return;
+      stepSlider(1);
+    };
+
+    const play = () => {
+      if (!highlightAuto || highlightAuto.timer || !highlightAuto.playing || reduce) return;
+      paintHighlightPager(true);
+      highlightAuto.timer = window.setInterval(tick, AUTO_MS);
+    };
+
+    const pause = (hold) => {
+      stopHighlightAuto();
+      paintHighlightPager(false);
+      if (hold && highlightAuto?.playing) highlightAuto.resume = window.setTimeout(play, 7000);
+    };
+
+    const restart = () => {
+      stopHighlightAuto();
+      play();
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!highlightAuto) return;
+        if (entry.isIntersecting && highlightAuto.playing) play();
+        else stopHighlightAuto();
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(slider);
+
+    if (!slider.dataset.autoBound) {
+      slider.dataset.autoBound = "1";
+      const hold = () => highlightAuto?.pause?.(true);
+      slider.addEventListener("pointerdown", hold);
+      slider.addEventListener("focusin", hold);
+    }
+
+    highlightAuto = { timer: 0, resume: 0, io, pause, play, restart, playing: !reduce };
+    setPagerPlaying(!reduce);
+    paintHighlightPager(!reduce);
+    play();
+  };
+
   paintSlides();
+  attachHighlightAuto();
   prev?.addEventListener("click", () => stepSlider(-1));
   next?.addEventListener("click", () => stepSlider(1));
   slider?.addEventListener("keydown", (event) => {
     if (event.key === "ArrowRight") stepSlider(1);
     if (event.key === "ArrowLeft") stepSlider(-1);
   });
-  slides.forEach((el, n) => {
-    const activatePeek = (event) => {
-      if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
-      if (event.target.closest("a")) return;
-      event.preventDefault();
-      goSlide(n);
-    };
-    el.addEventListener("click", activatePeek);
-    el.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      activatePeek(event);
-    });
+  slider?.addEventListener("click", (event) => {
+    const el = event.target.closest(".slide");
+    if (!el || !slider.contains(el)) return;
+    if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
+    if (event.target.closest("a")) return;
+    event.preventDefault();
+    goSlide(slideEls().indexOf(el));
+  });
+  slider?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    const el = event.target.closest(".slide");
+    if (!el || !slider.contains(el)) return;
+    if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
+    event.preventDefault();
+    goSlide(slideEls().indexOf(el));
   });
 
   if (slider) {
@@ -211,17 +324,7 @@
     return !type || type === "watch";
   };
 
-  const skuSpec = (product) => {
-    const title = String(product.title || "");
-    const bits = [];
-    const mm = title.match(/(\d+)\s*mm/i);
-    if (mm) bits.push(`${mm[1]} MM`);
-    const shade = title.includes(" - ") ? title.split(" - ").pop().trim() : "";
-    if (shade && shade !== "Default Title") bits.push(shade);
-    return bits.join(" | ");
-  };
-
-  const skuLink = ({ href, image, title, spec, meta }) => {
+  const skuLink = ({ href, image, title, meta }) => {
     const link = document.createElement("a");
     link.className = "sku";
     link.href = href;
@@ -235,12 +338,6 @@
     const name = document.createElement("strong");
     name.textContent = title;
     link.append(img, name);
-    if (spec) {
-      const line = document.createElement("span");
-      line.className = "sku-spec";
-      line.textContent = spec;
-      link.append(line);
-    }
     if (meta) {
       const price = document.createElement("span");
       price.className = "sku-price";
@@ -258,7 +355,6 @@
           href: `${STORE}/products/${product.handle}`,
           image: sized(product.images?.[0]?.src),
           title: product.title,
-          spec: skuSpec(product),
           meta: rs(product.variants?.[0]?.price),
         })
       )
@@ -287,6 +383,65 @@
       if (batch.length < 250) break;
     }
     return products;
+  };
+
+  let sellersPromise = null;
+  const getSellers = () => {
+    if (!sellersPromise) {
+      sellersPromise = fetchCollectionProducts("best-sellers").then((list) => list.filter(isWatch));
+    }
+    return sellersPromise;
+  };
+
+  const familyOf = (title) => String(title || "").split(" - ")[0].trim();
+
+  const makeHighlightSlide = ({ family, product }) => {
+    const article = document.createElement("article");
+    article.className = "slide";
+    const copy = document.createElement("div");
+    copy.className = "slide-copy";
+    const heading = document.createElement("h3");
+    heading.textContent = family;
+    const link = document.createElement("a");
+    link.href = `${STORE}/products/${product.handle}`;
+    link.textContent = `Shop ${family.split(/\s+/)[0]}`;
+    copy.append(heading, link);
+    const img = document.createElement("img");
+    img.className = "slide-watch";
+    img.src = sized(product.images?.[0]?.src);
+    img.alt = family;
+    img.width = 800;
+    img.height = 800;
+    img.loading = "lazy";
+    img.decoding = "async";
+    article.append(copy, img);
+    return article;
+  };
+
+  const loadHighlights = async () => {
+    if (!slider) return;
+    try {
+      const products = await getSellers();
+      const families = [];
+      const seen = new Set();
+      products.forEach((product) => {
+        const family = familyOf(product.title);
+        const key = family.toLowerCase();
+        if (!family || seen.has(key)) return;
+        seen.add(key);
+        families.push({ family, product });
+      });
+      if (!families.length) {
+        attachHighlightAuto();
+        return;
+      }
+      slider.replaceChildren(...families.map(makeHighlightSlide));
+      index = 0;
+      paintSlides();
+      attachHighlightAuto();
+    } catch (error) {
+      attachHighlightAuto();
+    }
   };
 
   const loadArrivals = async () => {
@@ -321,7 +476,7 @@
     const rail = document.querySelector('[data-rail="sellers"]');
     if (!rail) return;
     try {
-      const products = (await fetchCollectionProducts("best-sellers")).filter(isWatch);
+      const products = await getSellers();
       if (!products.length) throw new Error("empty");
       paintLoved(rail, products);
     } catch (error) {
@@ -329,50 +484,44 @@
     }
   };
 
-  loadArrivals();
-  loadSellers();
-
   const railScroller = (rail) => {
     if (!rail) return null;
-    if (window.matchMedia("(min-width: 768px)").matches) {
-      return rail.querySelector(".loved-grid") || rail;
-    }
-    return rail;
+    return rail.querySelector(".loved-grid") || rail;
+  };
+
+  const cardStep = (scroller) => {
+    const card = scroller.querySelector(".sku, .sku-wait, .col-card");
+    const styles = getComputedStyle(scroller);
+    const gap = parseFloat(styles.columnGap || styles.gap) || 8;
+    return card ? card.getBoundingClientRect().width + gap : scroller.clientWidth * 0.72;
   };
 
   const stepRail = (name, dir) => {
     const rail = document.querySelector(`[data-rail="${name}"]`);
     const scroller = railScroller(rail);
     if (!scroller) return;
-    const kids = [...(scroller === rail ? rail.children : scroller.children)].filter((el) =>
-      el.matches(".loved-promo, .sku, .sku-wait")
-    );
-    if (scroller === rail) {
-      const nested = [...rail.querySelectorAll(".loved-promo, .sku, .col-card")];
-      const x = scroller.scrollLeft;
-      const points = nested.length ? nested : kids;
-      const origin = points[0] ? points[0].offsetLeft : 0;
-      const next =
-        dir > 0
-          ? points.find((el) => el.offsetLeft > x + origin + 12)
-          : [...points].reverse().find((el) => el.offsetLeft < x - 12);
-      const target = next || points[dir > 0 ? points.length - 1 : 0];
-      if (target) {
-        scroller.scrollTo({ left: target.offsetLeft, behavior: reduce ? "auto" : "smooth" });
-      }
-      return;
-    }
-    const card = scroller.querySelector(".sku, .col-card");
-    const styles = getComputedStyle(scroller);
-    const gap = parseFloat(styles.columnGap || styles.gap) || 14;
-    const width = card ? card.getBoundingClientRect().width + gap : scroller.clientWidth * 0.8;
-    scroller.scrollBy({ left: dir * width, behavior: reduce ? "auto" : "smooth" });
+    scroller.scrollBy({ left: dir * cardStep(scroller), behavior: reduce ? "auto" : "smooth" });
   };
 
+  loadArrivals();
+  loadSellers();
+  loadHighlights();
+  desktopView.addEventListener("change", attachHighlightAuto);
+
+  document.querySelector('[data-pager-toggle="highlights"]')?.addEventListener("click", () => {
+    if (!highlightAuto) return;
+    highlightAuto.playing = !highlightAuto.playing;
+    setPagerPlaying(highlightAuto.playing);
+    if (highlightAuto.playing) highlightAuto.restart?.();
+    else highlightAuto.pause?.(false);
+  });
+
   document.querySelectorAll("[data-rail-prev], [data-rail-next]").forEach((button) => {
-    const name = button.getAttribute("data-rail-prev") || button.getAttribute("data-rail-next");
-    const dir = button.hasAttribute("data-rail-next") ? 1 : -1;
-    button.addEventListener("click", () => stepRail(name, dir));
+    button.addEventListener("click", () => {
+      const prev = button.getAttribute("data-rail-prev");
+      const next = button.getAttribute("data-rail-next");
+      stepRail(prev || next, prev ? -1 : 1);
+    });
   });
 
   document.querySelectorAll("[data-rail]").forEach((rail) => {
