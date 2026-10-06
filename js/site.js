@@ -5,11 +5,9 @@
   const media = document.querySelector(".hero-media");
   const video = document.querySelector("[data-hero-video]");
   const frames = [...document.querySelectorAll("[data-frame]")];
-  const slider = document.querySelector("[data-slider]");
-  const prev = document.querySelector("[data-prev]");
-  const next = document.querySelector("[data-next]");
-  const menu = document.querySelector("[data-menu-toggle]");
-  const drawer = document.querySelector("[data-drawer]");
+  const lineup = document.querySelector("#lineup");
+  const menu = document.querySelector(".nav-menu");
+  const drawer = document.querySelector("#site-menu");
 
   const showFrame = (i) => {
     frames.forEach((img, n) => img.classList.toggle("is-on", n === i));
@@ -52,54 +50,16 @@
     navWatch.observe(hero);
   }
 
-  const slideEls = () => [...(slider?.querySelectorAll(".slide") || [])];
+  const slideEls = () => [...(lineup?.querySelectorAll("wa-carousel-item") || [])];
   let index = 0;
-  let highlightAuto = null;
-  const AUTO_MS = 3400;
 
-  const slideName = (el) => el.querySelector("h3")?.textContent.trim() || "watch";
-
-  const paintSlides = () => {
-    const slides = slideEls();
-    const total = slides.length;
-    if (!total) return;
-    slides.forEach((el, n) => {
-      el.classList.remove("is-prev", "is-current", "is-next");
-      let slot = n - index;
-      if (slot > total / 2) slot -= total;
-      if (slot < -total / 2) slot += total;
-      el.dataset.slot = String(Math.max(-2, Math.min(2, slot)));
-      if (slot === 0) el.classList.add("is-current");
-      else if (slot === -1) el.classList.add("is-prev");
-      else if (slot === 1) el.classList.add("is-next");
-      const current = slot === 0;
-      const peek = slot === -1 || slot === 1;
-      el.setAttribute("aria-hidden", String(!current && !peek));
-      if (current) el.setAttribute("aria-current", "true");
-      else el.removeAttribute("aria-current");
-      if (peek) {
-        el.setAttribute("role", "button");
-        el.tabIndex = 0;
-        el.setAttribute("aria-label", `Show ${slideName(el)}`);
-      } else {
-        el.removeAttribute("role");
-        el.removeAttribute("tabindex");
-        el.removeAttribute("aria-label");
-      }
-    });
-    paintHighlightPager(Boolean(highlightAuto?.timer));
-  };
-
-  const goSlide = (next) => {
+  const goSlide = (dest) => {
     const total = slideEls().length;
-    if (!total) return;
-    const dest = (next + total) % total;
-    if (dest === index) return;
-    index = dest;
-    paintSlides();
+    if (!total || !lineup?.goToSlide) return;
+    index = (dest + total) % total;
+    lineup.goToSlide(index, reduce ? "auto" : "smooth");
+    paintHighlightPager(Boolean(lineup.autoplay));
   };
-
-  const stepSlider = (dir) => goSlide(index + dir);
 
   const setPagerPlaying = (playing) => {
     const toggle = document.querySelector('[data-pager-toggle="highlights"]');
@@ -113,194 +73,79 @@
     const pips = document.querySelector('[data-pager-pips="highlights"]');
     if (!pips) return;
     const slides = slideEls();
-    const pages = Math.min(8, slides.length);
+    const pages = slides.length;
     if (!pages) {
       pips.replaceChildren();
       return;
     }
-    const current = pages <= 1 ? 0 : Math.round((index / Math.max(1, slides.length - 1)) * (pages - 1));
+    const current = index;
     pips.replaceChildren(
       ...Array.from({ length: pages }, (_, i) => {
         const pip = document.createElement("button");
         pip.type = "button";
         pip.className = "rail-pager-pip";
         pip.setAttribute("aria-label", `Go to watch ${i + 1}`);
-        if (i === current) {
+        if (i === index) {
           pip.classList.add("is-on");
           if (playing) pip.classList.add("is-playing");
           pip.append(document.createElement("i"));
         }
-        pip.addEventListener("click", () => {
-          const dest = pages <= 1 ? 0 : Math.round((i / (pages - 1)) * (slides.length - 1));
-          goSlide(dest);
-          if (highlightAuto?.playing) highlightAuto.restart?.();
-          else paintHighlightPager(false);
-        });
+        pip.addEventListener("click", () => goSlide(i));
         return pip;
       })
     );
   };
 
-  const stopHighlightAuto = () => {
-    if (!highlightAuto) return;
-    if (highlightAuto.timer) window.clearInterval(highlightAuto.timer);
-    if (highlightAuto.resume) window.clearTimeout(highlightAuto.resume);
-    highlightAuto.timer = 0;
-    highlightAuto.resume = 0;
-  };
-
-  const desktopView = window.matchMedia("(min-width: 768px)");
-
-  const attachHighlightAuto = () => {
-    if (!slider) return;
-    stopHighlightAuto();
-    highlightAuto?.io?.disconnect();
-
-    const tick = () => {
-      if (document.hidden) return;
-      stepSlider(1);
-    };
-
-    const play = () => {
-      if (!highlightAuto || highlightAuto.timer || !highlightAuto.playing || reduce) return;
-      paintHighlightPager(true);
-      highlightAuto.timer = window.setInterval(tick, AUTO_MS);
-    };
-
-    const pause = (hold) => {
-      stopHighlightAuto();
-      paintHighlightPager(false);
-      if (hold && highlightAuto?.playing) highlightAuto.resume = window.setTimeout(play, 7000);
-    };
-
-    const restart = () => {
-      stopHighlightAuto();
-      play();
-    };
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (!highlightAuto) return;
-        if (entry.isIntersecting && highlightAuto.playing) play();
-        else stopHighlightAuto();
-      },
-      { threshold: 0.2 }
-    );
-    io.observe(slider);
-
-    if (!slider.dataset.autoBound) {
-      slider.dataset.autoBound = "1";
-      const hold = () => highlightAuto?.pause?.(true);
-      slider.addEventListener("pointerdown", hold);
-      slider.addEventListener("focusin", hold);
+  const sizeCarousels = () => {
+    const width = window.innerWidth;
+    const skuPages = width >= 768 ? 2 : 1;
+    document.querySelectorAll(".sku-rail").forEach((rail) => {
+      rail.slidesPerPage = skuPages;
+      rail.style.setProperty("--scroll-hint", width >= 768 ? "0px" : "14%");
+    });
+    const reels = document.querySelector("#reels-rail");
+    if (reels) {
+      reels.slidesPerPage = width >= 1024 ? 5 : width >= 768 ? 3 : 1;
+      reels.style.setProperty("--scroll-hint", width >= 1024 ? "0px" : "16%");
     }
-
-    highlightAuto = { timer: 0, resume: 0, io, pause, play, restart, playing: !reduce };
-    setPagerPlaying(!reduce);
-    paintHighlightPager(!reduce);
-    play();
+    if (lineup) lineup.style.setProperty("--scroll-hint", width >= 768 ? "30%" : "0px");
   };
 
-  paintSlides();
-  attachHighlightAuto();
-  const nudgeHighlight = (dir) => {
-    stepSlider(dir);
-    highlightAuto?.pause?.(true);
+  const bootCarousels = () => {
+    if (reduce && lineup) lineup.autoplay = false;
+    sizeCarousels();
+    setPagerPlaying(!reduce && Boolean(lineup?.autoplay));
+    paintHighlightPager(!reduce && Boolean(lineup?.autoplay));
   };
-  prev?.addEventListener("click", () => nudgeHighlight(-1));
-  next?.addEventListener("click", () => nudgeHighlight(1));
-  slider?.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") stepSlider(1);
-    if (event.key === "ArrowLeft") stepSlider(-1);
-  });
-  slider?.addEventListener("click", (event) => {
-    const el = event.target.closest(".slide");
-    if (!el || !slider.contains(el)) return;
-    if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
-    if (event.target.closest("a")) return;
-    event.preventDefault();
-    goSlide(slideEls().indexOf(el));
-  });
-  slider?.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return;
-    const el = event.target.closest(".slide");
-    if (!el || !slider.contains(el)) return;
-    if (!el.classList.contains("is-prev") && !el.classList.contains("is-next")) return;
-    event.preventDefault();
-    goSlide(slideEls().indexOf(el));
+
+  if (customElements.get("wa-carousel")) bootCarousels();
+  else customElements.whenDefined("wa-carousel").then(bootCarousels);
+  window.addEventListener("resize", sizeCarousels);
+
+  lineup?.addEventListener("wa-slide-change", (event) => {
+    const nextIndex = Number(event.detail?.index);
+    if (Number.isInteger(nextIndex)) index = nextIndex;
+    paintHighlightPager(Boolean(lineup.autoplay));
   });
 
-  if (slider) {
-    let dragX = 0;
-    let startX = 0;
-    let dragging = false;
-    let dragged = false;
-    const endDrag = () => {
-      if (!dragging) return;
-      dragging = false;
-      slider.classList.remove("is-dragging");
-      slider.style.setProperty("--drag", "0px");
-      if (dragX < -48) stepSlider(1);
-      else if (dragX > 48) stepSlider(-1);
-      dragX = 0;
-    };
-    slider.addEventListener("pointerdown", (event) => {
-      if (event.pointerType === "mouse" && event.button !== 0) return;
-      if (event.target.closest("a, .highlights-controls")) return;
-      dragging = true;
-      dragged = false;
-      startX = event.clientX;
-      dragX = 0;
-      slider.classList.add("is-dragging");
-      slider.style.setProperty("--drag", "0px");
-      slider.setPointerCapture(event.pointerId);
+  document.querySelectorAll("[data-carousel-prev], [data-carousel-next]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-carousel-prev") || button.getAttribute("data-carousel-next");
+      const carousel = document.getElementById(id);
+      if (!carousel) return;
+      const behavior = reduce ? "auto" : "smooth";
+      if (button.hasAttribute("data-carousel-prev")) carousel.previous?.(behavior);
+      else carousel.next?.(behavior);
     });
-    slider.addEventListener("pointermove", (event) => {
-      if (!dragging) return;
-      dragX = event.clientX - startX;
-      slider.style.setProperty("--drag", `${dragX}px`);
-      if (Math.abs(dragX) > 12) dragged = true;
-    });
-    slider.addEventListener("pointerup", endDrag);
-    slider.addEventListener("pointercancel", endDrag);
-    slider.addEventListener(
-      "click",
-      (event) => {
-        if (!dragged) return;
-        dragged = false;
-        event.preventDefault();
-        event.stopPropagation();
-      },
-      true
-    );
-  }
-
-  const strip = document.querySelector("[data-reels]");
-  const reelPrev = document.querySelector("[data-reel-prev]");
-  const reelNext = document.querySelector("[data-reel-next]");
-
-  const stepReels = (dir) => {
-    if (!strip) return;
-    const card = strip.querySelector(".reel");
-    const w = card ? card.getBoundingClientRect().width + 16 : 240;
-    strip.scrollBy({ left: dir * w, behavior: reduce ? "auto" : "smooth" });
-  };
-
-  reelPrev?.addEventListener("click", () => stepReels(-1));
-  reelNext?.addEventListener("click", () => stepReels(1));
-  strip?.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowRight") stepReels(1);
-    if (event.key === "ArrowLeft") stepReels(-1);
   });
 
-  const setDrawer = (open) => {
-    if (!drawer || !menu) return;
-    drawer.toggleAttribute("hidden", !open);
-    menu.setAttribute("aria-expanded", String(open));
-    document.body.classList.toggle("is-locked", open);
-    if (open) drawer.querySelector("a")?.focus();
-    else menu.focus();
-  };
+  drawer?.addEventListener("wa-show", () => menu?.setAttribute("aria-expanded", "true"));
+  drawer?.addEventListener("wa-after-hide", () => menu?.setAttribute("aria-expanded", "false"));
+  drawer?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      drawer.open = false;
+    });
+  });
 
   const STORE = "https://www.brunomilano.com";
 
@@ -346,16 +191,23 @@
     return link;
   };
 
+  const carouselItem = (node) => {
+    const item = document.createElement("wa-carousel-item");
+    item.append(node);
+    return item;
+  };
+
   const paintLoved = (rail, products) => {
-    const grid = rail.querySelector(".loved-grid") || rail;
-    grid.replaceChildren(
+    rail.replaceChildren(
       ...products.map((product) =>
-        skuLink({
-          href: `${STORE}/products/${product.handle}`,
-          image: sized(product.images?.[0]?.src),
-          title: product.title,
-          meta: rs(product.variants?.[0]?.price),
-        })
+        carouselItem(
+          skuLink({
+            href: `${STORE}/products/${product.handle}`,
+            image: sized(product.images?.[0]?.src),
+            title: product.title,
+            meta: rs(product.variants?.[0]?.price),
+          })
+        )
       )
     );
     rail.setAttribute("aria-busy", "false");
@@ -364,11 +216,10 @@
   const failRail = (name) => {
     const rail = document.querySelector(`[data-rail="${name}"]`);
     const note = document.querySelector(`[data-${name}-note]`);
-    const grid = rail?.querySelector(".loved-grid") || rail;
-    if (grid) {
-      grid.replaceChildren();
+    if (rail) {
+      rail.replaceChildren();
+      rail.setAttribute("aria-busy", "false");
     }
-    if (rail) rail.setAttribute("aria-busy", "false");
     if (note) note.hidden = false;
   };
 
@@ -418,7 +269,7 @@
   };
 
   const loadHighlights = async () => {
-    if (!slider) return;
+    if (!lineup) return;
     try {
       const products = await getSellers();
       const families = [];
@@ -430,16 +281,13 @@
         seen.add(key);
         families.push({ family, product });
       });
-      if (!families.length) {
-        attachHighlightAuto();
-        return;
-      }
-      slider.replaceChildren(...families.map(makeHighlightSlide));
+      if (!families.length) return;
+      lineup.replaceChildren(...families.map((entry) => carouselItem(makeHighlightSlide(entry))));
       index = 0;
-      paintSlides();
-      attachHighlightAuto();
+      lineup.goToSlide?.(0, "auto");
+      paintHighlightPager(Boolean(lineup.autoplay));
     } catch (error) {
-      attachHighlightAuto();
+      paintHighlightPager(Boolean(lineup.autoplay));
     }
   };
 
@@ -447,23 +295,13 @@
     const rail = document.querySelector('[data-rail="arrivals"]');
     if (!rail) return;
     try {
-      let fromCollection = "new-arrivals";
-      let products = [];
-      try {
-        products = await fetchCollectionProducts("new-arrivals");
-      } catch (error) {
-        products = [];
-      }
-      if (!products.length) {
-        fromCollection = "all";
-        products = await fetchCollectionProducts("all");
-      }
-      products = products.filter(isWatch);
-      if (fromCollection === "all") {
-        products.sort((a, b) =>
+      let products = await fetchCollectionProducts("all");
+      products = products
+        .filter(isWatch)
+        .sort((a, b) =>
           String(b.published_at || b.created_at || "").localeCompare(String(a.published_at || a.created_at || ""))
-        );
-      }
+        )
+        .slice(0, 10);
       if (!products.length) throw new Error("empty");
       paintLoved(rail, products);
     } catch (error) {
@@ -475,7 +313,7 @@
     const rail = document.querySelector('[data-rail="sellers"]');
     if (!rail) return;
     try {
-      const products = await getSellers();
+      const products = (await getSellers()).slice(0, 10);
       if (!products.length) throw new Error("empty");
       paintLoved(rail, products);
     } catch (error) {
@@ -483,53 +321,15 @@
     }
   };
 
-  const railScroller = (rail) => {
-    if (!rail) return null;
-    return rail.querySelector(".loved-grid") || rail;
-  };
-
-  const cardStep = (scroller) => {
-    const card = scroller.querySelector(".sku, .sku-wait, .col-card");
-    const styles = getComputedStyle(scroller);
-    const gap = parseFloat(styles.columnGap || styles.gap) || 8;
-    return card ? card.getBoundingClientRect().width + gap : scroller.clientWidth * 0.72;
-  };
-
-  const stepRail = (name, dir) => {
-    const rail = document.querySelector(`[data-rail="${name}"]`);
-    const scroller = railScroller(rail);
-    if (!scroller) return;
-    scroller.scrollBy({ left: dir * cardStep(scroller), behavior: reduce ? "auto" : "smooth" });
-  };
-
   loadArrivals();
   loadSellers();
   loadHighlights();
-  desktopView.addEventListener("change", attachHighlightAuto);
 
   document.querySelector('[data-pager-toggle="highlights"]')?.addEventListener("click", () => {
-    if (!highlightAuto) return;
-    highlightAuto.playing = !highlightAuto.playing;
-    setPagerPlaying(highlightAuto.playing);
-    if (highlightAuto.playing) highlightAuto.restart?.();
-    else highlightAuto.pause?.(false);
-  });
-
-  document.querySelectorAll("[data-rail-prev], [data-rail-next]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const prev = button.getAttribute("data-rail-prev");
-      const next = button.getAttribute("data-rail-next");
-      stepRail(prev || next, prev ? -1 : 1);
-    });
-  });
-
-  document.querySelectorAll("[data-rail]").forEach((rail) => {
-    rail.addEventListener("keydown", (event) => {
-      const name = rail.getAttribute("data-rail");
-      if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
-      event.preventDefault();
-      stepRail(name, event.key === "ArrowRight" ? 1 : -1);
-    });
+    if (!lineup) return;
+    lineup.autoplay = !lineup.autoplay;
+    setPagerPlaying(Boolean(lineup.autoplay));
+    paintHighlightPager(Boolean(lineup.autoplay));
   });
 
   const reveal = [...document.querySelectorAll(".origin, .promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .signup")];
@@ -552,24 +352,6 @@
       reveal.forEach((el) => watchIn.observe(el));
     }
   }
-
-  menu?.addEventListener("click", () => setDrawer(drawer.hasAttribute("hidden")));
-  drawer?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setDrawer(false)));
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") setDrawer(false);
-    if (!drawer || drawer.hasAttribute("hidden") || event.key !== "Tab") return;
-    const items = [...drawer.querySelectorAll("a")];
-    if (!items.length) return;
-    const first = items[0];
-    const last = items[items.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  });
 
   const faces = ["sora", "outfit", "syne", "onest", "urbanist", "archivo", "familjen"];
   const faceSelects = [...document.querySelectorAll("[data-face-select]")];
@@ -607,106 +389,4 @@
     true
   );
   email?.addEventListener("input", () => showHint(false));
-
-  const sequence = document.getElementById("sequence-section");
-  const seqCanvas = document.getElementById("sequence-canvas");
-  if (sequence && seqCanvas) {
-    const ctx = seqCanvas.getContext("2d");
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    const mobile = window.innerWidth <= 900;
-    const frameCount = mobile ? 192 : 238;
-    const imageCache = {};
-    let currentFrame = 0;
-    let targetFrame = 0;
-    let animationRunning = false;
-    const buyBtn = sequence.querySelector(".sequence-buy-btn");
-    const seqText = sequence.querySelector(".bmvidtext");
-
-    const getFrameUrl = (index) =>
-      mobile
-        ? `https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Sequence_${String(1000 + index).padStart(5, "0")}.jpg`
-        : `https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Sequence_03_${1000 + index}.jpg`;
-
-    const drawImage = (index) => {
-      const img = imageCache[index];
-      if (!img || !img.complete || !img.naturalWidth) return;
-      const viewWidth = window.innerWidth;
-      const viewHeight = window.innerHeight;
-      ctx.clearRect(0, 0, viewWidth, viewHeight);
-      const scale = Math.max(viewWidth / img.width, viewHeight / img.height);
-      const width = img.width * scale;
-      const height = img.height * scale;
-      ctx.drawImage(img, (viewWidth - width) / 2, (viewHeight - height) / 2, width, height);
-    };
-
-    const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
-      seqCanvas.width = window.innerWidth * dpr;
-      seqCanvas.height = window.innerHeight * dpr;
-      seqCanvas.style.width = `${window.innerWidth}px`;
-      seqCanvas.style.height = `${window.innerHeight}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawImage(Math.round(currentFrame));
-    };
-
-    const preloadImages = () => {
-      for (let i = 0; i < frameCount; i += 1) {
-        const img = new Image();
-        img.onload = () => {
-          if (i === 0) resizeCanvas();
-        };
-        img.src = getFrameUrl(i);
-        imageCache[i] = img;
-      }
-    };
-
-    const animateFrames = () => {
-      currentFrame += (targetFrame - currentFrame) * 0.08;
-      if (Math.abs(targetFrame - currentFrame) < 0.1) {
-        currentFrame = targetFrame;
-        animationRunning = false;
-      } else {
-        requestAnimationFrame(animateFrames);
-      }
-      drawImage(Math.round(currentFrame));
-    };
-
-    const updateSequence = () => {
-      const rect = sequence.getBoundingClientRect();
-      const scrollable = sequence.offsetHeight - window.innerHeight;
-      let progress = -rect.top / scrollable;
-      progress = Math.max(0, Math.min(1, progress));
-      const buyBtnHidePoint = window.innerHeight * 0.6;
-      const textHidePoint = window.innerHeight * 0.8;
-      if (progress > 0.15 && rect.bottom > buyBtnHidePoint) buyBtn?.classList.add("show");
-      else buyBtn?.classList.remove("show");
-      if (progress > 0.08 && rect.bottom > textHidePoint) seqText?.classList.add("show");
-      else seqText?.classList.remove("show");
-      if (reduce) {
-        currentFrame = 0;
-        drawImage(0);
-        return;
-      }
-      targetFrame = progress * (frameCount - 1);
-      if (!animationRunning) {
-        animationRunning = true;
-        requestAnimationFrame(animateFrames);
-      }
-    };
-
-    preloadImages();
-    window.addEventListener("resize", resizeCanvas);
-    window.addEventListener("scroll", updateSequence, { passive: true });
-    window.addEventListener("load", resizeCanvas);
-    updateSequence();
-
-    if (nav) {
-      const seqWatch = new IntersectionObserver(
-        ([entry]) => nav.classList.toggle("is-seq", entry.isIntersecting),
-        { threshold: 0.12 }
-      );
-      seqWatch.observe(sequence);
-    }
-  }
 })();
