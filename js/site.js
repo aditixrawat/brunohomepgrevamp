@@ -55,7 +55,7 @@
     const skuPages = width >= 768 ? 2 : 1;
     document.querySelectorAll(".sku-rail").forEach((rail) => {
       rail.slidesPerPage = skuPages;
-      rail.style.setProperty("--scroll-hint", width >= 768 ? "0px" : "14%");
+      rail.style.setProperty("--scroll-hint", "0px");
     });
     const reels = document.querySelector("#reels-rail");
     if (reels) {
@@ -264,15 +264,18 @@
     img.height = 900;
     img.loading = "lazy";
     img.decoding = "async";
+    const copy = document.createElement("span");
+    copy.className = "sku-copy";
     const name = document.createElement("strong");
     name.textContent = title;
-    link.append(img, name);
+    copy.append(name);
     if (meta) {
       const price = document.createElement("span");
       price.className = "sku-price";
       price.textContent = meta;
-      link.append(price);
+      copy.append(price);
     }
+    link.append(img, copy);
     return link;
   };
 
@@ -361,7 +364,7 @@
   loadArrivals();
   loadSellers();
 
-  const reveal = [...document.querySelectorAll(".promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels")];
+  const reveal = [...document.querySelectorAll(".promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .lux-footer")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {
@@ -376,9 +379,14 @@
             }
           });
         },
-        { threshold: 0.08 }
+        { threshold: 0.15, rootMargin: "0px 0px 12% 0px" }
       );
-      reveal.forEach((el) => watchIn.observe(el));
+      reveal.forEach((el) => {
+        el.classList.add("will-reveal");
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) markIn(el);
+        else watchIn.observe(el);
+      });
     }
   }
 
@@ -399,6 +407,59 @@
     el.addEventListener("input", () => applyFace(el.value));
     el.addEventListener("change", () => applyFace(el.value));
   });
+
+  const sequence = document.getElementById("sequence-section");
+  const seqVideo = document.getElementById("sequence-video");
+  if (sequence && seqVideo) {
+    const buyBtn = sequence.querySelector(".sequence-buy-btn");
+    const seqText = sequence.querySelector(".bmvidtext");
+    let targetTime = 0;
+    let frame = 0;
+
+    const paint = () => {
+      frame = 0;
+      if (reduce || !seqVideo.duration) return;
+      if (Math.abs(seqVideo.currentTime - targetTime) < 0.03) return;
+      seqVideo.currentTime = targetTime;
+    };
+
+    const updateSequence = () => {
+      const rect = sequence.getBoundingClientRect();
+      const scrollable = sequence.offsetHeight - window.innerHeight;
+      const onScreen = rect.bottom > 0 && rect.top < window.innerHeight;
+      let progress = scrollable > 0 ? -rect.top / scrollable : 0;
+      progress = Math.max(0, Math.min(1, progress));
+      const buyHide = window.innerHeight * 0.6;
+      const textHide = window.innerHeight * 0.8;
+      if (onScreen && progress > 0.15 && rect.bottom > buyHide) buyBtn?.classList.add("show");
+      else buyBtn?.classList.remove("show");
+      if (onScreen && progress > 0.08 && rect.bottom > textHide) seqText?.classList.add("show");
+      else seqText?.classList.remove("show");
+      if (reduce || !onScreen) return;
+      const duration = seqVideo.duration || 10;
+      targetTime = Math.min(Math.max(duration - 0.05, 0), progress * duration);
+      if (!frame) frame = requestAnimationFrame(paint);
+    };
+
+    const arm = () => {
+      seqVideo.pause();
+      updateSequence();
+    };
+    seqVideo.addEventListener("loadedmetadata", arm);
+    window.addEventListener("scroll", updateSequence, { passive: true });
+    window.addEventListener("resize", updateSequence);
+
+    const direct = seqVideo.dataset.src;
+    fetch(direct)
+      .then((res) => {
+        if (!res.ok) throw new Error("video");
+        return res.blob();
+      })
+      .then((blob) => {
+        seqVideo.src = URL.createObjectURL(blob);
+      })
+      .catch(arm);
+  }
 
   document.querySelectorAll(".lux-footer .ft-acc-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
