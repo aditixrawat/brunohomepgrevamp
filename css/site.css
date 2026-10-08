@@ -3345,14 +3345,13 @@ a {
 
 #sequence-video {
   position: absolute;
-  left: 0;
-  top: 5vh;
+  inset: 0;
   display: block;
   width: 100%;
-  height: calc(100% - 10vh);
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
-  background: transparent;
+  background: #f4f4f4;
   pointer-events: none;
 }
 
