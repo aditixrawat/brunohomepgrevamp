@@ -449,7 +449,8 @@
     window.addEventListener("scroll", updateSequence, { passive: true });
     window.addEventListener("resize", updateSequence);
 
-    const direct = seqVideo.dataset.src;
+    const mobileCut = window.matchMedia("(max-width: 767px)").matches;
+    const direct = (mobileCut && seqVideo.dataset.srcMobile) || seqVideo.dataset.src;
     fetch(direct)
       .then((res) => {
         if (!res.ok) throw new Error("video");
