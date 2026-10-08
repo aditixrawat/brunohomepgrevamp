@@ -50,52 +50,6 @@
     navWatch.observe(hero);
   }
 
-  const slideEls = () => [...(lineup?.querySelectorAll("wa-carousel-item") || [])];
-  let index = 0;
-
-  const goSlide = (dest) => {
-    const total = slideEls().length;
-    if (!total || !lineup?.goToSlide) return;
-    index = (dest + total) % total;
-    lineup.goToSlide(index, reduce ? "auto" : "smooth");
-    paintHighlightPager(Boolean(lineup.autoplay));
-  };
-
-  const setPagerPlaying = (playing) => {
-    const toggle = document.querySelector('[data-pager-toggle="highlights"]');
-    if (!toggle) return;
-    toggle.classList.toggle("is-paused", !playing);
-    toggle.setAttribute("aria-pressed", String(!playing));
-    toggle.setAttribute("aria-label", playing ? "Pause auto-scroll" : "Play auto-scroll");
-  };
-
-  const paintHighlightPager = (playing) => {
-    const pips = document.querySelector('[data-pager-pips="highlights"]');
-    if (!pips) return;
-    const slides = slideEls();
-    const pages = slides.length;
-    if (!pages) {
-      pips.replaceChildren();
-      return;
-    }
-    const current = index;
-    pips.replaceChildren(
-      ...Array.from({ length: pages }, (_, i) => {
-        const pip = document.createElement("button");
-        pip.type = "button";
-        pip.className = "rail-pager-pip";
-        pip.setAttribute("aria-label", `Go to watch ${i + 1}`);
-        if (i === index) {
-          pip.classList.add("is-on");
-          if (playing) pip.classList.add("is-playing");
-          pip.append(document.createElement("i"));
-        }
-        pip.addEventListener("click", () => goSlide(i));
-        return pip;
-      })
-    );
-  };
-
   const sizeCarousels = () => {
     const width = window.innerWidth;
     const skuPages = width >= 768 ? 2 : 1;
@@ -108,25 +62,20 @@
       reels.slidesPerPage = width >= 1024 ? 5 : width >= 768 ? 3 : 1;
       reels.style.setProperty("--scroll-hint", width >= 1024 ? "0px" : "16%");
     }
-    if (lineup) lineup.style.setProperty("--scroll-hint", width >= 768 ? "30%" : "0px");
+    if (lineup) {
+      lineup.slidesPerPage = width >= 1100 ? 3 : width >= 720 ? 2 : 1;
+      lineup.style.setProperty("--scroll-hint", width >= 1100 ? "7%" : width >= 720 ? "12%" : "0px");
+    }
   };
 
   const bootCarousels = () => {
-    if (reduce && lineup) lineup.autoplay = false;
+    if (lineup) lineup.autoplay = false;
     sizeCarousels();
-    setPagerPlaying(!reduce && Boolean(lineup?.autoplay));
-    paintHighlightPager(!reduce && Boolean(lineup?.autoplay));
   };
 
   if (customElements.get("wa-carousel")) bootCarousels();
   else customElements.whenDefined("wa-carousel").then(bootCarousels);
   window.addEventListener("resize", sizeCarousels);
-
-  lineup?.addEventListener("wa-slide-change", (event) => {
-    const nextIndex = Number(event.detail?.index);
-    if (Number.isInteger(nextIndex)) index = nextIndex;
-    paintHighlightPager(Boolean(lineup.autoplay));
-  });
 
   document.querySelectorAll("[data-carousel-prev], [data-carousel-next]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -148,6 +97,142 @@
   });
 
   const STORE = "https://www.brunomilano.com";
+
+  const lifestyle = [
+    {
+      handle: "verona-amore-leopardo",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/ca3f6376-3e64-4da0-9fce-a2a2d2af808f/0-2135e514090b78e5ec19caf1092366cd88942f2e1b10949d7a382ef814f242cb.png",
+      scene: "The concert",
+      line: "Lights up.",
+      alt: "Woman at a concert wearing Verona Amore - Leopardo",
+      who: "woman",
+    },
+    {
+      handle: "radiante-heritage-blu",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/3ab7710a-685a-4ec4-9e92-43c5c407b089/0-a505c8474bf24d6340c9d70532589f380b1c7b5bd017174469750f5dbf69a83c.png",
+      scene: "The wedding",
+      line: "Before the vows.",
+      alt: "Man at a wedding wearing Radiante Heritage - Blu",
+      who: "man",
+    },
+    {
+      handle: "metropolis-classic-blu-rosso",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/8a390908-f64d-4423-ad3c-a6a4f52d6ba3/0-064df79eeed7677a8daa5e5b02341c19d3c2222f40dade996881143026ea4dc0.png",
+      scene: "The boardroom",
+      line: "Meeting, closed.",
+      alt: "Man in a boardroom wearing Metropolis Classic - Blu-Rosso",
+      who: "man",
+    },
+    {
+      handle: "lombardy-luxe-rosa-teal",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/b4f9c947-ed6c-4a7c-8073-333958bdd163/0-a0ceb0f0b3dbe00ae3199bdcac05af757333e4482dc4872bee176e16220e596a.png",
+      scene: "Dinner",
+      line: "Held at the table.",
+      alt: "Woman at dinner wearing Lombardy Luxe - Rosa Teal",
+      who: "woman",
+    },
+    {
+      handle: "manzoni-perla-rosa",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/3f7a6ea5-554e-44d8-a160-8e6ca0bac1c2/0-4e80dfc263a9f4c51bbd92ceb245c547e763861ede211207f7f5a25268f92823.png",
+      scene: "Office hours",
+      line: "Across the glass.",
+      alt: "Woman in a boardroom wearing Manzoni - Perla Rosa",
+      who: "woman",
+    },
+    {
+      handle: "vittorio-chrono-verde",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/5c6ae885-c415-4ac4-935e-9aa3f63e8f80/0-3aadac1831ca7c1073c92c12adc42c8e1d99e7ca244b313db103d15484c7b6bd.png",
+      scene: "The party",
+      line: "Last round.",
+      alt: "Man at a party wearing Vittorio Chrono - Verde",
+      who: "man",
+    },
+    {
+      handle: "metropolis-transizione-arancione",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/619fff74-d45d-4b12-88b4-695a13aca6d6/0-78facf8fc170d599b4594659a55276e1dbcf0c3a87db4e9dcfc108aaf0d97ac6.png",
+      scene: "Pickleball",
+      line: "Between points.",
+      alt: "Man on a pickleball court wearing Metropolis Transizione - Arancione",
+      who: "man",
+    },
+    {
+      handle: "bruno-milano-ring-watch-for-women-and-girls-stretchable-adjustable-band-stainless-steel-jewellery-accessories",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/268a3fd7-f4f8-4b25-be5a-c9b308c1b0f9/0-b1ce78a9a1a6058187c30e2f12a94bf2328e2ad9a61cc44e5b0c3176c66e39e9.png",
+      scene: "The wedding",
+      line: "On one finger.",
+      alt: "Woman at a wedding wearing the Ring Watch on her finger",
+      who: "woman",
+    },
+    {
+      handle: "ambrosiana-chic-con-braccialetto-verde",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/592539af-ec0e-42e0-9d0e-2c0f2ed8170c/0-41a044782b4e6ce41b4f37f1ef89ad8de6f91972d9f647f59ff72a764abb011c.png",
+      scene: "Date night",
+      line: "Watch and bracelet.",
+      alt: "Woman on a date wearing Ambrosiana Chic con Braccialetto - Verde",
+      who: "woman",
+    },
+    {
+      handle: "sportiva-classic-blu",
+      image:
+        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/84b3cbbe-fd88-4ca1-99e3-6b6ed973c1a5/0-814abc565b651120dd3c585fec7a2ac7921aea48cd662b28794b095fcc659afc.png",
+      scene: "The drive",
+      line: "Window down.",
+      alt: "Man on a weekend drive wearing Sportiva Classic - Blu",
+      who: "man",
+    },
+  ];
+
+  const shuffle = (list) => {
+    const next = list.slice();
+    for (let i = next.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const hold = next[i];
+      next[i] = next[j];
+      next[j] = hold;
+    }
+    return next;
+  };
+
+  const editCard = (item) => {
+    const link = document.createElement("a");
+    link.className = "edit-card";
+    link.href = `${STORE}/products/${item.handle}`;
+    const img = document.createElement("img");
+    img.src = item.image;
+    img.alt = item.alt;
+    img.width = 1024;
+    img.height = 1024;
+    img.loading = "lazy";
+    img.decoding = "async";
+    const copy = document.createElement("div");
+    copy.className = "edit-card-copy";
+    const scene = document.createElement("span");
+    scene.textContent = item.scene;
+    const line = document.createElement("strong");
+    line.textContent = item.line;
+    copy.append(scene, line);
+    link.append(img, copy);
+    return link;
+  };
+
+  const editGrid = document.querySelector("[data-edit]");
+  if (editGrid) {
+    const men = shuffle(lifestyle.filter((item) => item.who === "man")).slice(0, 2);
+    const women = shuffle(lifestyle.filter((item) => item.who === "woman")).slice(0, 2);
+    const lead = Math.random() < 0.5 ? men : women;
+    const follow = lead === men ? women : men;
+    const picks = [lead[0], follow[0], lead[1], follow[1]];
+    editGrid.replaceChildren(...picks.map(editCard));
+  }
 
   const rs = (value) => {
     const amount = Number(value);
@@ -243,54 +328,6 @@
     return sellersPromise;
   };
 
-  const familyOf = (title) => String(title || "").split(" - ")[0].trim();
-
-  const makeHighlightSlide = ({ family, product }) => {
-    const article = document.createElement("article");
-    article.className = "slide";
-    const copy = document.createElement("div");
-    copy.className = "slide-copy";
-    const heading = document.createElement("h3");
-    heading.textContent = family;
-    const link = document.createElement("a");
-    link.href = `${STORE}/products/${product.handle}`;
-    link.textContent = `Shop ${family.split(/\s+/)[0]}`;
-    copy.append(heading, link);
-    const img = document.createElement("img");
-    img.className = "slide-watch";
-    img.src = sized(product.images?.[0]?.src);
-    img.alt = family;
-    img.width = 800;
-    img.height = 800;
-    img.loading = "lazy";
-    img.decoding = "async";
-    article.append(copy, img);
-    return article;
-  };
-
-  const loadHighlights = async () => {
-    if (!lineup) return;
-    try {
-      const products = await getSellers();
-      const families = [];
-      const seen = new Set();
-      products.forEach((product) => {
-        const family = familyOf(product.title);
-        const key = family.toLowerCase();
-        if (!family || seen.has(key)) return;
-        seen.add(key);
-        families.push({ family, product });
-      });
-      if (!families.length) return;
-      lineup.replaceChildren(...families.map((entry) => carouselItem(makeHighlightSlide(entry))));
-      index = 0;
-      lineup.goToSlide?.(0, "auto");
-      paintHighlightPager(Boolean(lineup.autoplay));
-    } catch (error) {
-      paintHighlightPager(Boolean(lineup.autoplay));
-    }
-  };
-
   const loadArrivals = async () => {
     const rail = document.querySelector('[data-rail="arrivals"]');
     if (!rail) return;
@@ -323,16 +360,8 @@
 
   loadArrivals();
   loadSellers();
-  loadHighlights();
 
-  document.querySelector('[data-pager-toggle="highlights"]')?.addEventListener("click", () => {
-    if (!lineup) return;
-    lineup.autoplay = !lineup.autoplay;
-    setPagerPlaying(Boolean(lineup.autoplay));
-    paintHighlightPager(Boolean(lineup.autoplay));
-  });
-
-  const reveal = [...document.querySelectorAll(".origin, .promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .signup")];
+  const reveal = [...document.querySelectorAll(".promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {
@@ -371,22 +400,12 @@
     el.addEventListener("change", () => applyFace(el.value));
   });
 
-  const form = document.querySelector(".signup-form");
-  const email = document.querySelector("#signup-email");
-  const hint = document.querySelector("#signup-hint");
-  const showHint = (on) => {
-    if (!hint || !email) return;
-    hint.hidden = !on;
-    email.setAttribute("aria-invalid", on ? "true" : "false");
-  };
-  form?.addEventListener(
-    "invalid",
-    (event) => {
-      event.preventDefault();
-      showHint(true);
-      email?.focus();
-    },
-    true
-  );
-  email?.addEventListener("input", () => showHint(false));
+  document.querySelectorAll(".lux-footer .ft-acc-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (window.innerWidth > 991) return;
+      const col = btn.closest(".ft-col");
+      const open = col.classList.toggle("active");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
 })();

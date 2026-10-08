@@ -37,7 +37,7 @@
       href="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747430833-fauc4.jpg?v=1790747433"
       media="(min-width: 768px)"
     />
-    <link rel="stylesheet" href="css/site.css?v=wa11" />
+    <link rel="stylesheet" href="css/site.css?v=wa35" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -109,6 +109,18 @@
         <a href="https://www.brunomilano.com/account">Account</a>
         <a href="https://www.brunomilano.com/cart">Cart</a>
       </nav>
+      <label class="type-switch drawer-face">
+        <span>Type</span>
+        <select data-face-select aria-label="Typeface" onchange="applyBrunoFace(this.value)">
+          <option value="sora">Sora</option>
+          <option value="outfit">Outfit</option>
+          <option value="syne">Syne</option>
+          <option value="onest">Onest</option>
+          <option value="urbanist">Urbanist</option>
+          <option value="archivo">Archivo</option>
+          <option value="familjen">Familjen</option>
+        </select>
+      </label>
     </wa-drawer>
 
     <main id="main">
@@ -201,109 +213,146 @@
         </ul>
       </section>
 
-      <section class="origin" aria-labelledby="origin-title">
-        <div class="origin-copy">
-          <h2 id="origin-title">Made to be worn.</h2>
-          <p>
-            Bruno Milano is for the outfit you already have. A 2024 fashion-watch brand. Rachit tries every design
-            on his own wrist. Saurabh runs product from the factory floor. Thirty years of making fashion watches,
-            none of the vault talk.
-          </p>
-        </div>
-      </section>
-
       <section class="highlights" id="highlights" aria-labelledby="highlights-title">
-        <div class="highlights-bar">
-          <h2 id="highlights-title" class="vh">The lineup</h2>
+        <header class="fam-head">
+          <h2 id="highlights-title">The lineup</h2>
+          <p>Explore the collections</p>
+        </header>
+        <div class="fam-stage">
+          <wa-carousel
+            id="lineup"
+            class="lineup"
+            loop
+            mouse-dragging
+            slides-per-page="1"
+            aria-label="Watch collections"
+          >
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/doppio-chrono">
+                <div class="fam-scene">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/mood_shots_Chrono_Gold_green.png?v=1788512703&amp;width=1400"
+                    alt=""
+                    width="1400"
+                    height="875"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="fam-scene-copy">
+                    <h3>Doppio Chrono</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/doppio-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/ambrosiana-chic">
+                <div class="fam-scene">
+                  <img src="assets/ambrosiana-mood.jpg" alt="" width="1400" height="875" loading="lazy" decoding="async" />
+                  <div class="fam-scene-copy">
+                    <h3>Ambrosiana Chic</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/ambrosiana-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/vittorio-chrono">
+                <div class="fam-scene">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Mood_6beb14e9-bd3a-4a20-ae34-c59e3052780c.jpg?v=1788512620&amp;width=1400"
+                    alt=""
+                    width="1400"
+                    height="875"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="fam-scene-copy">
+                    <h3>Vittorio Chrono</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/vittorio-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/duomo-heritage">
+                <div class="fam-scene">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Model_black_tachy.png?v=1768879119&amp;width=1400"
+                    alt=""
+                    width="1400"
+                    height="875"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="fam-scene-copy">
+                    <h3>Duomo Heritage</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/duomo-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/metropolis-classic">
+                <div class="fam-scene">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/metropolis-classic-nero-verde--One.png?v=1780645991&amp;width=1400"
+                    alt=""
+                    width="1400"
+                    height="875"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="fam-scene-copy">
+                    <h3>Metropolis Classic</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/metropolis-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+            <wa-carousel-item>
+              <a class="fam" href="https://www.brunomilano.com/collections/venezia">
+                <div class="fam-scene">
+                  <img
+                    src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/inhandgold_green.png?v=1788512167&amp;width=1400"
+                    alt=""
+                    width="1400"
+                    height="875"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div class="fam-scene-copy">
+                    <h3>Venezia</h3>
+                    <span>See the family</span>
+                  </div>
+                </div>
+                <img class="fam-watch" src="assets/venezia-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
+                <span class="fam-cta">View the watches</span>
+              </a>
+            </wa-carousel-item>
+          </wa-carousel>
           <div class="highlights-controls">
-            <button type="button" data-carousel-prev="lineup" aria-label="Previous highlight">
+            <button type="button" data-carousel-prev="lineup" aria-label="Previous collection">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
               </svg>
             </button>
-            <button type="button" data-carousel-next="lineup" aria-label="Next highlight">
+            <button type="button" data-carousel-next="lineup" aria-label="Next collection">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
                 <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
               </svg>
             </button>
           </div>
-        </div>
-        <wa-carousel
-          id="lineup"
-          class="lineup"
-          loop
-          mouse-dragging
-          autoplay
-          autoplay-interval="3400"
-          slides-per-page="1"
-          aria-label="Highlights"
-        >
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Doppio Chrono</h3>
-                <a href="https://www.brunomilano.com/collections/doppio-chrono">Shop Doppio</a>
-              </div>
-              <img class="slide-watch" src="assets/doppio-cut.png" alt="Doppio Chrono" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Ambrosiana Chic</h3>
-                <a href="https://www.brunomilano.com/collections/ambrosiana-chic">Shop Ambrosiana</a>
-              </div>
-              <img class="slide-watch" src="assets/ambrosiana-cut.png" alt="Ambrosiana Chic" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Vittorio Chrono</h3>
-                <a href="https://www.brunomilano.com/collections/vittorio-chrono">Shop Vittorio</a>
-              </div>
-              <img class="slide-watch" src="assets/vittorio-cut.png" alt="Vittorio Chrono" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Duomo Heritage</h3>
-                <a href="https://www.brunomilano.com/collections/duomo-heritage">Shop Duomo</a>
-              </div>
-              <img class="slide-watch" src="assets/duomo-cut.png" alt="Duomo Heritage" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Metropolis Classic</h3>
-                <a href="https://www.brunomilano.com/collections/metropolis-classic">Shop Metropolis</a>
-              </div>
-              <img class="slide-watch" src="assets/metropolis-cut.png" alt="Metropolis Classic" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-          <wa-carousel-item>
-            <article class="slide">
-              <div class="slide-copy">
-                <h3>Venezia</h3>
-                <a href="https://www.brunomilano.com/collections/best-sellers">Shop Venezia</a>
-              </div>
-              <img class="slide-watch" src="assets/venezia-cut.png" alt="Venezia" width="800" height="800" loading="lazy" decoding="async" />
-            </article>
-          </wa-carousel-item>
-        </wa-carousel>
-        <div class="rail-pager" data-pager="highlights">
-          <button type="button" class="rail-pager-toggle" data-pager-toggle="highlights" aria-pressed="false" aria-label="Pause auto-scroll">
-            <svg class="is-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <rect x="7" y="6" width="3.2" height="12" rx="1" />
-              <rect x="13.8" y="6" width="3.2" height="12" rx="1" />
-            </svg>
-            <svg class="is-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M8.4 6.4v11.2L18.2 12Z" />
-            </svg>
-          </button>
-          <div class="rail-pager-pips" data-pager-pips="highlights" role="presentation"></div>
         </div>
       </section>
 
@@ -348,14 +397,20 @@
 
       <section class="split" aria-label="Men and women">
         <a class="split-panel" href="https://www.brunomilano.com/collections/mens-watches">
-          <img src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790683495313-etxxb.jpg?v=1790683498" alt="" width="2048" height="2048" loading="lazy" decoding="async" />
+          <picture>
+            <source media="(max-width: 767px)" srcset="assets/split-men-m.jpg" width="864" height="1152" />
+            <img src="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790683495313-etxxb.jpg?v=1790683498" alt="" width="2048" height="2048" loading="lazy" decoding="async" />
+          </picture>
           <span>
             <strong>Men</strong>
             <em>Steel, on the town.</em>
           </span>
         </a>
         <a class="split-panel" href="https://www.brunomilano.com/collections/womens-watches">
-          <img src="assets/split-women.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+          <picture>
+            <source media="(max-width: 767px)" srcset="assets/split-women-m.jpg" width="864" height="1152" />
+            <img src="assets/split-women.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+          </picture>
           <span>
             <strong>Women</strong>
             <em>Color, in the light.</em>
@@ -418,39 +473,66 @@
           <h2 id="edit-title">More faces. More attitude.</h2>
           <div class="edit-intro">
             <p>
-              A sharper fashion story with distinct personalities for work hours, coffee stops, travel days and
-              after-dark plans.
+              Work, dinner, a wedding, a drive. Four looks from the edit, a different set each time you come back.
             </p>
             <a href="https://www.brunomilano.com/collections/best-sellers">Shop the edit</a>
           </div>
         </div>
-        <div class="edit-grid">
-          <a class="edit-card" href="https://www.brunomilano.com/collections/mens-watches">
-            <img src="assets/lifestyle-9to5.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+        <div class="edit-grid" data-edit>
+          <a class="edit-card" href="https://www.brunomilano.com/products/verona-amore-leopardo">
+            <img
+              src="https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/ca3f6376-3e64-4da0-9fce-a2a2d2af808f/0-2135e514090b78e5ec19caf1092366cd88942f2e1b10949d7a382ef814f242cb.png"
+              alt="Woman at a concert wearing Verona Amore - Leopardo"
+              width="1024"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="edit-card-copy">
-              <span>The 9 to 5</span>
-              <strong>On the steps.</strong>
+              <span>The concert</span>
+              <strong>Lights up.</strong>
             </div>
           </a>
-          <a class="edit-card" href="https://www.brunomilano.com/collections/ambrosiana-chic">
-            <img src="assets/lifestyle-night.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+          <a class="edit-card" href="https://www.brunomilano.com/products/radiante-heritage-blu">
+            <img
+              src="https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/3ab7710a-685a-4ec4-9e92-43c5c407b089/0-a505c8474bf24d6340c9d70532589f380b1c7b5bd017174469750f5dbf69a83c.png"
+              alt="Man at a wedding wearing Radiante Heritage - Blu"
+              width="1024"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="edit-card-copy">
-              <span>After dark</span>
-              <strong>Night, handled.</strong>
+              <span>The wedding</span>
+              <strong>Before the vows.</strong>
             </div>
           </a>
-          <a class="edit-card" href="https://www.brunomilano.com/collections/stainless-steel">
-            <img src="assets/lifestyle-move.jpg" alt="" width="572" height="1024" loading="lazy" decoding="async" />
+          <a class="edit-card" href="https://www.brunomilano.com/products/lombardy-luxe-rosa-teal">
+            <img
+              src="https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/b4f9c947-ed6c-4a7c-8073-333958bdd163/0-a0ceb0f0b3dbe00ae3199bdcac05af757333e4482dc4872bee176e16220e596a.png"
+              alt="Woman at dinner wearing Lombardy Luxe - Rosa Teal"
+              width="1024"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="edit-card-copy">
-              <span>On the move</span>
-              <strong>Departures, styled.</strong>
+              <span>Dinner</span>
+              <strong>Held at the table.</strong>
             </div>
           </a>
-          <a class="edit-card" href="https://www.brunomilano.com/collections/womens-watches">
-            <img src="assets/lifestyle-coffee.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async" />
+          <a class="edit-card" href="https://www.brunomilano.com/products/sportiva-classic-blu">
+            <img
+              src="https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/84b3cbbe-fd88-4ca1-99e3-6b6ed973c1a5/0-814abc565b651120dd3c585fec7a2ac7921aea48cd662b28794b095fcc659afc.png"
+              alt="Man on a weekend drive wearing Sportiva Classic - Blu"
+              width="1024"
+              height="1024"
+              loading="lazy"
+              decoding="async"
+            />
             <div class="edit-card-copy">
-              <span>Coffee run</span>
-              <strong>Café charm.</strong>
+              <span>The drive</span>
+              <strong>Window down.</strong>
             </div>
           </a>
         </div>
@@ -508,7 +590,7 @@
           </button>
           <wa-carousel id="reels-rail" class="reels-strip" loop mouse-dragging slides-per-page="1" aria-label="Reels">
             <wa-carousel-item>
-            <article class="reel">
+            <a class="reel" href="https://www.brunomilano.com/products/verona-amore-leopardo">
               <video
                 src="https://assets.gethelium.co/workspaces/fc2d8b6b-077d-4a78-aad5-070125fc6577/uploads/8c989a86-8325-4325-ac58-a7acdddfa758-09d27a181be8f8834af62e210086e8cc6423d0b54c4c1c54d433c815ab6700bb.mp4"
                 muted
@@ -516,12 +598,16 @@
                 playsinline
                 autoplay
                 preload="metadata"
-                title="Bruno Milano reel"
+                title="Verona Amore - Leopardo"
               ></video>
-            </article>
+              <div class="reel-copy">
+                <strong>Verona Amore</strong>
+                <span>Leopardo</span>
+              </div>
+            </a>
             </wa-carousel-item>
             <wa-carousel-item>
-            <article class="reel">
+            <a class="reel" href="https://www.brunomilano.com/products/ambrosiana-chic-perla-rosa">
               <video
                 src="https://assets.gethelium.co/workspaces/fc2d8b6b-077d-4a78-aad5-070125fc6577/uploads/52081832-e180-468a-9fcd-eeb5bf81e1d1-5d119ed9a92753ff57e3f5105f337313912d7372423057beb59d3b34f25e3344.mp4"
                 muted
@@ -529,12 +615,16 @@
                 playsinline
                 autoplay
                 preload="metadata"
-                title="Bruno Milano reel"
+                title="Ambrosiana Chic - Perla Rosa"
               ></video>
-            </article>
+              <div class="reel-copy">
+                <strong>Ambrosiana Chic</strong>
+                <span>Perla Rosa</span>
+              </div>
+            </a>
             </wa-carousel-item>
             <wa-carousel-item>
-            <article class="reel">
+            <a class="reel" href="https://www.brunomilano.com/products/sportiva-classic-arancione">
               <video
                 src="https://assets.gethelium.co/workspaces/fc2d8b6b-077d-4a78-aad5-070125fc6577/uploads/776db121-809f-4b35-8810-677f45e06ca9-a935d56395e56e44f81f911d841099b68c25234778ca838525d8e1beaa9058e3.mp4"
                 muted
@@ -542,12 +632,16 @@
                 playsinline
                 autoplay
                 preload="metadata"
-                title="Bruno Milano reel"
+                title="Sportiva Classic - Arancione"
               ></video>
-            </article>
+              <div class="reel-copy">
+                <strong>Sportiva Classic</strong>
+                <span>Arancione</span>
+              </div>
+            </a>
             </wa-carousel-item>
             <wa-carousel-item>
-            <article class="reel">
+            <a class="reel" href="https://www.brunomilano.com/products/venezia-verde">
               <video
                 src="https://assets.gethelium.co/workspaces/fc2d8b6b-077d-4a78-aad5-070125fc6577/uploads/28c8654f-5728-46d0-b952-9f5589f827b1-42a44f2a6dacea53b1b159eca0ef4bcdb58397d914af94c599880c2551fc3382.mp4"
                 muted
@@ -555,12 +649,16 @@
                 playsinline
                 autoplay
                 preload="metadata"
-                title="Bruno Milano reel"
+                title="Venezia - Verde"
               ></video>
-            </article>
+              <div class="reel-copy">
+                <strong>Venezia</strong>
+                <span>Verde</span>
+              </div>
+            </a>
             </wa-carousel-item>
             <wa-carousel-item>
-            <article class="reel">
+            <a class="reel" href="https://www.brunomilano.com/products/ambrosiana-chic-cuoio-verde">
               <video
                 src="https://assets.gethelium.co/workspaces/fc2d8b6b-077d-4a78-aad5-070125fc6577/uploads/1d840dc7-1998-42fa-a970-9ad917423b8a-08d6a31d4877ab034d9562a6e35a5b467ef00c0a6bd669ca8d2b0cdec15540b5.mp4"
                 muted
@@ -568,9 +666,13 @@
                 playsinline
                 autoplay
                 preload="metadata"
-                title="Bruno Milano reel"
+                title="Ambrosiana Chic Cuoio - Verde"
               ></video>
-            </article>
+              <div class="reel-copy">
+                <strong>Ambrosiana Chic</strong>
+                <span>Cuoio Verde</span>
+              </div>
+            </a>
             </wa-carousel-item>
           </wa-carousel>
           <button class="reels-nav" type="button" data-carousel-next="reels-rail" aria-label="Next stories">
@@ -630,58 +732,113 @@
       </section>
     </main>
 
-    <section class="signup" aria-labelledby="signup-title">
-      <h2 id="signup-title">Get the next drop.</h2>
-      <form
-        class="signup-form"
-        action="https://www.brunomilano.com/contact#contact_form"
-        method="post"
-        accept-charset="UTF-8"
-      >
-        <input type="hidden" name="form_type" value="customer" />
-        <input type="hidden" name="utf8" value="✓" />
-        <input type="hidden" name="contact[tags]" value="newsletter" />
-        <label class="vh" for="signup-email">Email</label>
-        <input
-          id="signup-email"
-          type="email"
-          name="contact[email]"
-          required
-          autocomplete="email"
-          inputmode="email"
-          spellcheck="false"
-          aria-describedby="signup-hint"
-          placeholder="Your email"
-        />
-        <button type="submit" aria-label="Subscribe">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
-            <path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z" />
-          </svg>
-        </button>
-        <p id="signup-hint" class="signup-hint" hidden>Enter a valid email for new colorways.</p>
-      </form>
-    </section>
+    <footer class="lux-footer">
+      <div class="page-width">
+        <div class="ft-top">
+          <img
+            src="https://www.brunomilano.com/cdn/shop/files/download_afa9c7cc-7da1-49d3-81a5-c8a0dd79497c.png?v=1780045077"
+            alt="Bruno Milano"
+            width="220"
+            height="64"
+          />
+          <p class="ft-tag">Quality timepieces, accessibly priced. Made for the wrist, not the museum.</p>
+        </div>
 
-    <footer class="foot">
-      <div>
-        <strong>Bruno Milano</strong>
-        <p>Not just what you wear. How you wear time.</p>
+        <div class="ft-news">
+          <div class="ft-news-left">
+            <div class="lbl">Newsletter</div>
+            <h3>Drops, restocks, no noise.</h3>
+          </div>
+          <div class="ft-news-right">
+            <form class="newsletter-form" method="post" action="https://www.brunomilano.com/contact#contact_form" accept-charset="UTF-8">
+              <input type="hidden" name="form_type" value="customer" />
+              <input type="hidden" name="utf8" value="✓" />
+              <input type="hidden" name="contact[tags]" value="newsletter" />
+              <div class="row">
+                <label class="vh" for="footer-email">Email</label>
+                <input id="footer-email" type="email" name="contact[email]" placeholder="you@email.com" required autocomplete="email" inputmode="email" />
+                <button type="submit">Subscribe</button>
+              </div>
+            </form>
+            <div class="fine">
+              <p>By subscribing you agree to our privacy policy. Unsubscribe anytime.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ft-cols">
+          <div class="ft-col">
+            <button class="ft-acc-btn" type="button" aria-expanded="false">
+              <h4>Shop</h4>
+              <span aria-hidden="true">+</span>
+            </button>
+            <ul class="ft-menu">
+              <li><a href="https://www.brunomilano.com/collections/all">All Watches</a></li>
+              <li><a href="https://www.brunomilano.com/collections/mens-watches">Mens</a></li>
+              <li><a href="https://www.brunomilano.com/collections/womens-watches">Womens</a></li>
+              <li><a href="https://www.brunomilano.com/collections/best-sellers">Best Sellers</a></li>
+              <li><a href="https://www.brunomilano.com/collections/straps">Straps</a></li>
+            </ul>
+          </div>
+          <div class="ft-col">
+            <button class="ft-acc-btn" type="button" aria-expanded="false">
+              <h4>Help</h4>
+              <span aria-hidden="true">+</span>
+            </button>
+            <ul class="ft-menu">
+              <li><a href="https://www.brunomilano.com/pages/warranty-registration">Warranty Registration</a></li>
+              <li><a href="https://www.brunomilano.com/pages/faqs">FAQs</a></li>
+              <li><a href="https://www.brunomilano.com/pages/return-and-exchange-policy">Return &amp; Exchange Policy</a></li>
+              <li><a href="https://www.brunomilano.com/pages/refund-policy">Refund Policy</a></li>
+              <li><a href="https://www.brunomilano.com/pages/warranty-policy">Warranty Policy</a></li>
+              <li><a href="https://www.brunomilano.com/pages/grievances">Grievance Policy</a></li>
+              <li><a href="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/Ambervision-AGM_Notice.zip?v=1790319637">AGM Notice</a></li>
+            </ul>
+          </div>
+          <div class="ft-col">
+            <button class="ft-acc-btn" type="button" aria-expanded="false">
+              <h4>About</h4>
+              <span aria-hidden="true">+</span>
+            </button>
+            <ul class="ft-menu">
+              <li><a href="https://www.brunomilano.com/pages/about-us">About Us</a></li>
+              <li><a href="https://www.brunomilano.com/blogs/latest-articles">Blog</a></li>
+              <li><a href="https://www.brunomilano.com/pages/corporate-orders">Corporate Gifts</a></li>
+              <li><a href="https://www.brunomilano.com/pages/the-vault">The Vault</a></li>
+              <li><a href="https://www.brunomilano.com/pages/contact">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ft-bot">
+          <div class="ft-copy">
+            © 2026 Bruno Milano
+            <div class="pay">Visa · Mastercard · Amex · UPI · Net Banking · EMI</div>
+          </div>
+          <div class="social">
+            <a href="https://www.instagram.com/brunomilanowatches" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle></svg>
+            </a>
+            <a href="https://www.facebook.com/brunomilanowatches" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 22v-8h3l.5-4H13V7.5c0-1.2.3-2 2-2h2V2c-.3 0-1.5-.2-2.8-.2-2.8 0-4.7 1.7-4.7 4.8V10H7v4h3v8z"></path></svg>
+            </a>
+            <a href="https://wa.me/918920663146" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.6 6L4 27l6.2-1.6c1.7 1 3.7 1.5 5.8 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.6-3.5-1.6-5.5C5.8 9.5 10.4 4.9 16 4.9S26.2 9.5 26.2 15 21.6 24.8 16 24.8zm5.6-7.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"></path></svg>
+            </a>
+            <a href="https://www.youtube.com/@BrunoMilanoWatches" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 8.5c0-1.7-1.3-3-3-3H5c-1.7 0-3 1.3-3 3v7c0 1.7 1.3 3 3 3h14c1.7 0 3-1.3 3-3zM10 15V9l5 3z"></path></svg>
+            </a>
+          </div>
+          <nav class="legal" aria-label="Legal">
+            <a href="https://www.brunomilano.com/policies/privacy-policy">Privacy Policy</a>
+            <a href="https://www.brunomilano.com/policies/terms-of-service">Terms of Service</a>
+            <a href="https://www.brunomilano.com/pages/return-and-exchange-policy">Refund Policy</a>
+            <a href="https://www.brunomilano.com/policies/contact-information">Contact Information</a>
+          </nav>
+        </div>
       </div>
-      <nav aria-label="Footer">
-        <a href="https://www.brunomilano.com/collections/all">Shop watches</a>
-        <a href="https://www.brunomilano.com/collections/stainless-steel">Stainless steel</a>
-        <a href="https://www.brunomilano.com/pages/about-us">Our story</a>
-        <a href="https://www.instagram.com/brunomilanowatches/">Instagram</a>
-        <a href="https://www.brunomilano.com/pages/warranty-registration">Register warranty</a>
-      </nav>
-      <nav class="legal" aria-label="Legal">
-        <a href="https://www.brunomilano.com/policies/privacy-policy">Privacy policy</a>
-        <a href="https://www.brunomilano.com/policies/terms-of-service">Terms of service</a>
-        <a href="https://www.brunomilano.com/policies/refund-policy">Refund policy</a>
-        <a href="https://www.brunomilano.com/pages/contact">Contact</a>
-      </nav>
     </footer>
 
-    <script src="js/site.js?v=wa11" defer></script>
+    <script src="js/site.js?v=wa34" defer></script>
   </body>
 </html>
