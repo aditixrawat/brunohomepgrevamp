@@ -461,6 +461,22 @@
       .catch(arm);
   }
 
+  const reviews = document.querySelector(".reviews");
+  const reviewSwitch = reviews?.querySelector(".reviews-switch");
+  if (reviews && reviewSwitch) {
+    reviewSwitch.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button || !reviewSwitch.contains(button)) return;
+      const panel = button.dataset.reviews === "panel";
+      reviews.classList.toggle("is-panel", panel);
+      reviewSwitch.querySelectorAll("button").forEach((item) => {
+        const on = item === button;
+        item.classList.toggle("is-on", on);
+        item.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+    });
+  }
+
   document.querySelectorAll(".lux-footer .ft-acc-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       if (window.innerWidth > 991) return;
