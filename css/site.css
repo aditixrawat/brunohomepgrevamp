@@ -3961,6 +3961,7 @@ wa-carousel.sku-rail::part(scroll-container) {
   display: grid;
   gap: 0.12rem;
   padding: 0 0.15rem 0.15rem;
+  text-align: center;
 }
 
 .sku-rail .sku-copy strong {
