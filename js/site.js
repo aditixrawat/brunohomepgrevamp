@@ -249,8 +249,9 @@
   const isWatch = (product) => {
     const title = product.title || "";
     const type = (product.product_type || "").toLowerCase();
-    if (/gift bag|apple band|strap|jewell?ery|ring watch/i.test(title)) return false;
-    return !type || type === "watch";
+    if (/gift bag|apple band|strap|jewell?ery|ring watch|workshop/i.test(title)) return false;
+    if (type === "watch strap") return false;
+    return type === "watch" || type === "watch set";
   };
 
   const skuLink = ({ href, image, title, meta }) => {
@@ -339,7 +340,7 @@
       products = products
         .filter(isWatch)
         .sort((a, b) =>
-          String(b.published_at || b.created_at || "").localeCompare(String(a.published_at || a.created_at || ""))
+          String(b.created_at || b.published_at || "").localeCompare(String(a.created_at || a.published_at || ""))
         )
         .slice(0, 10);
       if (!products.length) throw new Error("empty");
@@ -460,22 +461,6 @@
         seqVideo.src = URL.createObjectURL(blob);
       })
       .catch(arm);
-  }
-
-  const reviews = document.querySelector(".reviews");
-  const reviewSwitch = reviews?.querySelector(".reviews-switch");
-  if (reviews && reviewSwitch) {
-    reviewSwitch.addEventListener("click", (event) => {
-      const button = event.target.closest("button");
-      if (!button || !reviewSwitch.contains(button)) return;
-      const panel = button.dataset.reviews === "panel";
-      reviews.classList.toggle("is-panel", panel);
-      reviewSwitch.querySelectorAll("button").forEach((item) => {
-        const on = item === button;
-        item.classList.toggle("is-on", on);
-        item.setAttribute("aria-pressed", on ? "true" : "false");
-      });
-    });
   }
 
   document.querySelectorAll(".lux-footer .ft-acc-btn").forEach((btn) => {
