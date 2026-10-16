@@ -232,6 +232,63 @@
     const follow = lead === men ? women : men;
     const picks = [lead[0], follow[0], lead[1], follow[1]];
     editGrid.replaceChildren(...picks.map(editCard));
+
+    const mobileEdit = window.matchMedia("(max-width: 767px)");
+    let editTimer = 0;
+    let editResume = 0;
+    let editInView = false;
+    let editPaused = false;
+
+    const editStep = () => {
+      const card = editGrid.querySelector(".edit-card");
+      if (!card) return;
+      const gap = Number.parseFloat(getComputedStyle(editGrid).columnGap || getComputedStyle(editGrid).gap) || 0;
+      const stride = card.getBoundingClientRect().width + gap;
+      const max = editGrid.scrollWidth - editGrid.clientWidth - 4;
+      if (editGrid.scrollLeft >= max) {
+        editGrid.scrollTo({ left: 0, behavior: reduce ? "auto" : "smooth" });
+      } else {
+        editGrid.scrollBy({ left: stride, behavior: reduce ? "auto" : "smooth" });
+      }
+    };
+
+    const stopEditAuto = () => {
+      window.clearInterval(editTimer);
+      editTimer = 0;
+    };
+
+    const startEditAuto = () => {
+      stopEditAuto();
+      if (reduce || !mobileEdit.matches || !editInView || editPaused) return;
+      editTimer = window.setInterval(editStep, 3400);
+    };
+
+    const pauseEditAuto = () => {
+      editPaused = true;
+      stopEditAuto();
+      window.clearTimeout(editResume);
+      editResume = window.setTimeout(() => {
+        editPaused = false;
+        startEditAuto();
+      }, 4800);
+    };
+
+    new IntersectionObserver(
+      ([entry]) => {
+        editInView = Boolean(entry?.isIntersecting);
+        if (editInView) startEditAuto();
+        else stopEditAuto();
+      },
+      { threshold: 0.35 }
+    ).observe(editGrid);
+
+    ["pointerdown", "touchstart", "wheel"].forEach((evt) => {
+      editGrid.addEventListener(evt, pauseEditAuto, { passive: true });
+    });
+    mobileEdit.addEventListener("change", () => {
+      if (mobileEdit.matches) startEditAuto();
+      else stopEditAuto();
+    });
   }
 
   const rs = (value) => {

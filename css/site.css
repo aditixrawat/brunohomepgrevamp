@@ -1125,20 +1125,32 @@ a {
 }
 
 .edit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: var(--tile);
-  padding: 0 var(--pad);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--pad);
+  padding: 0 var(--pad) 0.15rem;
   padding-right: var(--pad-r);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.edit-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .edit-card {
   position: relative;
+  flex: 0 0 min(78vw, 19.5rem);
+  width: min(78vw, 19.5rem);
   min-width: 0;
   aspect-ratio: 3 / 4;
   overflow: hidden;
   color: var(--white);
   text-decoration: none;
+  scroll-snap-align: start;
 }
 
 .edit-card img {
