@@ -639,7 +639,7 @@ a {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
+  gap: 0.85rem 0;
   margin: 0 auto;
   padding: 0;
   max-width: 68rem;
@@ -651,6 +651,15 @@ a {
 
 .promises li + li {
   border-left: 1px solid rgb(250 250 250 / 0.18);
+}
+
+.promises li:nth-child(3n + 1) {
+  border-left: 0;
+}
+
+.promises li:nth-child(n + 4) {
+  border-top: 1px solid rgb(250 250 250 / 0.18);
+  padding-top: 0.85rem;
 }
 
 .promises a {
@@ -690,6 +699,55 @@ a {
   max-width: 16ch;
   color: rgb(250 250 250 / 0.78);
   font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+.direct {
+  background: var(--dial-wash);
+  color: var(--ink);
+  padding: 0.35rem var(--pad) 0.45rem;
+  padding-right: var(--pad-r);
+}
+
+.direct ul {
+  list-style: none;
+  display: grid;
+  gap: 0;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 72rem;
+}
+
+.direct li + li {
+  border-top: 1px solid color-mix(in oklab, var(--dial) 28%, white);
+}
+
+.direct a {
+  display: grid;
+  grid-template-columns: minmax(7.6rem, 9.2rem) minmax(0, 1fr);
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  min-height: 44px;
+  padding: 0.72rem 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.direct a:focus-visible {
+  outline: 2px solid var(--dial);
+  outline-offset: 2px;
+}
+
+.direct strong {
+  font-size: 0.84rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.direct span {
+  color: var(--ink);
+  font-size: 0.78rem;
   line-height: 1.35;
 }
 
@@ -1473,6 +1531,18 @@ a {
   transition: transform 0.55s var(--ease);
 }
 
+.fam-scene img.is-metro {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 210%;
+  margin: 0;
+  object-fit: cover;
+  object-position: center bottom;
+  transform: none;
+}
+
 .fam-scene::after {
   content: "";
   position: absolute;
@@ -2201,30 +2271,69 @@ a {
   color: #fff;
 }
 
-.lux-footer .ft-gift-cta {
+.lux-footer .ft-gift-form {
+  position: relative;
+  margin-top: 1.15rem;
+}
+
+.lux-footer .ft-gift-form label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.lux-footer .ft-gift-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.55rem;
+}
+
+.lux-footer .ft-gift-form input {
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #161718;
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.lux-footer .ft-gift-form input::placeholder {
+  color: #5c6166;
+}
+
+.lux-footer .ft-gift-form button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1.15rem;
   min-height: 44px;
   padding: 8px 22px;
   background: var(--gold-light);
   color: var(--accent);
   border: none;
   border-radius: 999px;
-  text-decoration: none;
   font: inherit;
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 600;
+  cursor: pointer;
 }
 
-.lux-footer .ft-gift-cta:hover {
+.lux-footer .ft-gift-form button:hover {
   color: var(--accent);
 }
 
-.lux-footer .ft-gift-cta:focus-visible {
+.lux-footer .ft-gift-form input:focus-visible,
+.lux-footer .ft-gift-form button:focus-visible {
   outline: 2px solid var(--gold-light);
   outline-offset: 3px;
 }
@@ -2412,7 +2521,11 @@ a {
     padding-bottom: 0.75rem;
   }
 
-  .lux-footer .ft-gift-cta {
+  .lux-footer .ft-gift-row {
+    grid-template-columns: 1fr;
+  }
+
+  .lux-footer .ft-gift-form button {
     width: 100%;
     min-height: 46px;
   }
@@ -2558,6 +2671,38 @@ a {
     max-width: 22ch;
     font-size: 0.8rem;
     line-height: 1.4;
+  }
+
+  .direct {
+    padding: 0.85rem var(--pad);
+    padding-right: var(--pad-r);
+  }
+
+  .direct ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .direct li + li {
+    border-top: 0;
+    border-left: 1px solid color-mix(in oklab, var(--dial) 28%, white);
+  }
+
+  .direct a {
+    display: block;
+    min-height: 100%;
+    padding: 0.2rem 1.15rem;
+  }
+
+  .direct strong {
+    display: block;
+    margin-bottom: 0.22rem;
+    font-size: 0.92rem;
+  }
+
+  .direct span {
+    display: block;
+    max-width: 24ch;
+    font-size: 0.8rem;
   }
 
   .loved {
@@ -3158,6 +3303,10 @@ a {
     transform: scale(1.07);
   }
 
+  .fam:hover .fam-scene img.is-metro {
+    transform: scale(1.04);
+  }
+
   .fam:hover .fam-cta {
     background-size: 100% 1px;
   }
@@ -3224,6 +3373,10 @@ a {
 
   .promises li:hover svg {
     transform: translateY(-3px);
+  }
+
+  .direct a:hover strong {
+    color: var(--dial);
   }
 
   .lux-footer .ft-col a:hover {
@@ -3299,7 +3452,7 @@ a {
   .shelf-controls button:active,
   .highlights-controls button:active,
   .reels-nav:active,
-  .lux-footer .ft-gift-cta:active,
+  .lux-footer .ft-gift-form button:active,
   .lux-footer .social a:active,
   .lux-footer .ft-acc-btn:active {
     scale: 0.98;
