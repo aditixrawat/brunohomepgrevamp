@@ -119,8 +119,7 @@
     },
     {
       handle: "metropolis-classic-blu-rosso",
-      image:
-        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/8a390908-f64d-4423-ad3c-a6a4f52d6ba3/0-064df79eeed7677a8daa5e5b02341c19d3c2222f40dade996881143026ea4dc0.png",
+      image: "assets/boardroom.jpg?v=1",
       scene: "The boardroom",
       line: "Meeting, closed.",
       alt: "Man in a boardroom wearing Metropolis Classic - Blu-Rosso",
@@ -137,8 +136,7 @@
     },
     {
       handle: "manzoni-perla-rosa",
-      image:
-        "https://assets.gethelium.co/workspaces/8e1e09b2-cbed-4d3c-b595-0e0489afab3d/generative/3f7a6ea5-554e-44d8-a160-8e6ca0bac1c2/0-4e80dfc263a9f4c51bbd92ceb245c547e763861ede211207f7f5a25268f92823.png",
+      image: "assets/office-hours.jpg?v=1",
       scene: "Office hours",
       line: "Across the glass.",
       alt: "Woman in a boardroom wearing Manzoni - Perla Rosa",
