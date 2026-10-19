@@ -586,6 +586,19 @@ a {
   z-index: 1;
 }
 
+h1 em,
+h2 em,
+h3 em {
+  font-style: italic;
+  font-weight: inherit;
+  color: var(--dial);
+}
+
+.loved-copy h2 em,
+.house-copy h2 em {
+  color: inherit;
+}
+
 .hero-copy h1,
 .shelf-bar h2,
 .faces > h2,
@@ -703,52 +716,83 @@ a {
 }
 
 .direct {
-  background: var(--dial-wash);
+  background: var(--paper);
   color: var(--ink);
-  padding: 0.35rem var(--pad) 0.45rem;
-  padding-right: var(--pad-r);
+  padding: 1.5rem clamp(1.15rem, 2vw, 1.75rem) 1.75rem;
+}
+
+.direct-panel {
+  max-width: none;
+  margin: 0 auto;
+  padding: 1.6rem 1.15rem 1.35rem;
+  background: var(--dial-wash);
+  text-align: center;
+}
+
+.direct-badge,
+.reviews-badge {
+  display: inline-block;
+  margin: 0;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  background: var(--dial);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+
+.direct h2 {
+  margin: 0.85rem 0 1.15rem;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.direct h2 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--dial);
 }
 
 .direct ul {
   list-style: none;
   display: grid;
-  gap: 0;
-  margin: 0 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem 0.6rem;
+  margin: 0;
   padding: 0;
-  max-width: 72rem;
-}
-
-.direct li + li {
-  border-top: 1px solid color-mix(in oklab, var(--dial) 28%, white);
 }
 
 .direct a {
   display: grid;
-  grid-template-columns: minmax(7.6rem, 9.2rem) minmax(0, 1fr);
-  gap: 0.35rem 0.85rem;
-  align-items: baseline;
+  justify-items: center;
+  gap: 0.55rem;
   min-height: 44px;
-  padding: 0.72rem 0;
+  padding: 0.2rem 0.4rem;
   color: inherit;
   text-decoration: none;
 }
 
 .direct a:focus-visible {
   outline: 2px solid var(--dial);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+.direct svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--ink);
 }
 
 .direct strong {
+  max-width: 14ch;
   font-size: 0.84rem;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
-}
-
-.direct span {
-  color: var(--ink);
-  font-size: 0.78rem;
-  line-height: 1.35;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
 }
 
 .shelf-bar,
@@ -1156,7 +1200,7 @@ a {
 
 .edit-head h2 {
   margin: 0 0 0.9rem;
-  max-width: 11ch;
+  max-width: 18ch;
   font-size: clamp(2.05rem, 7.2vw, 3.5rem);
   font-weight: 500;
   letter-spacing: -0.04em;
@@ -1531,18 +1575,6 @@ a {
   transition: transform 0.55s var(--ease);
 }
 
-.fam-scene img.is-metro {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 210%;
-  margin: 0;
-  object-fit: cover;
-  object-position: center bottom;
-  transform: none;
-}
-
 .fam-scene::after {
   content: "";
   position: absolute;
@@ -1771,29 +1803,45 @@ a {
 }
 
 .reviews {
-  padding: var(--section) var(--pad);
-  padding-right: var(--pad-r);
-  background: var(--ash);
-  border-top: 1px solid color-mix(in oklch, var(--ash) 70%, var(--ink));
+  padding: 1.5rem clamp(1.15rem, 2vw, 1.75rem) 0.25rem;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.reviews-panel {
+  max-width: none;
+  margin: 0 auto;
+  padding: 1.6rem 1.15rem 1.45rem;
+  background: var(--dial-wash);
+  text-align: center;
 }
 
 .reviews-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem 1.25rem;
-  margin: 0 0 var(--space-5);
+  margin: 0 0 1.35rem;
+}
+
+.reviews-badge {
+  margin: 0 0 0.85rem;
 }
 
 .reviews-head h2 {
   margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
-.reviews-head p {
-  margin: 0.35rem 0 0;
-  color: var(--dial-deep);
-  font-size: 0.9rem;
+.reviews-head h2 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--dial);
+}
+
+.reviews-note {
+  margin: 0.45rem 0 0;
+  color: var(--mute);
+  font-size: 0.95rem;
 }
 
 .reviews-cards {
@@ -1818,8 +1866,9 @@ a {
   width: 100%;
   height: 100%;
   padding: 1.5rem 1.25rem 1.25rem;
-  border: 1px solid color-mix(in oklch, var(--ink) 14%, var(--ash));
-  background: var(--ash);
+  border: 0;
+  background: var(--paper);
+  text-align: left;
 }
 
 .review-stars {
@@ -2218,30 +2267,42 @@ a {
 }
 
 .lux-footer .ft-gift {
+  position: relative;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-  padding: 0 0 50px;
-  border-bottom: 1px solid rgb(255 255 255 / 0.1);
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: center;
+  margin: 0 0 50px;
+  padding: 2.2rem 1.6rem;
+  border: 0;
+  background-color: #0a3320;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='%23145c38' d='M16 0 32 16 16 32 0 16Z'/%3E%3C/svg%3E");
+  background-size: 32px 32px;
 }
 
 .lux-footer .ft-gift h3 {
-  font-size: 44px;
+  font-size: clamp(2.6rem, 8vw, 4.4rem);
   margin: 0;
   font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  max-width: 12ch;
-  color: #fff;
+  letter-spacing: -0.03em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  color: #f6f1e8;
 }
 
 .lux-footer .ft-gift-copy p {
-  margin: 1rem 0 0;
-  max-width: 42ch;
+  margin: 0.9rem 0 0;
+  max-width: 28ch;
   font-size: 0.95rem;
-  line-height: 1.5;
-  color: rgb(255 255 255 / 0.82);
+  line-height: 1.45;
+  color: rgb(246 241 232 / 0.86);
+}
+
+.lux-footer .ft-gift-mark {
+  width: min(11.5rem, 38vw);
+  height: auto;
+  justify-self: end;
 }
 
 .lux-footer .ft-gift-side ul {
@@ -2448,12 +2509,12 @@ a {
 
 @media (max-width: 991px) {
   .lux-footer .ft-gift {
-    grid-template-columns: 1fr;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
   }
 
   .lux-footer .ft-gift h3 {
-    font-size: 32px;
+    font-size: clamp(2.2rem, 9vw, 3.2rem);
     max-width: none;
   }
 
@@ -2509,7 +2570,7 @@ a {
   }
 
   .lux-footer .ft-gift h3 {
-    font-size: 26px;
+    font-size: clamp(2rem, 10vw, 2.6rem);
   }
 
   .reviews {
@@ -2551,8 +2612,20 @@ a {
   }
 
   .lux-footer .ft-gift {
-    padding: 0 0 30px;
-    gap: 20px;
+    grid-template-columns: 1fr;
+    padding: 1.35rem 1.1rem 1.2rem;
+    gap: 0.75rem;
+  }
+
+  .lux-footer .ft-gift h3 {
+    padding-right: 5.4rem;
+  }
+
+  .lux-footer .ft-gift-mark {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.7rem;
+    width: 5.6rem;
   }
 
   .lux-footer .ft-col h4 {
@@ -2674,35 +2747,21 @@ a {
   }
 
   .direct {
-    padding: 0.85rem var(--pad);
-    padding-right: var(--pad-r);
+    padding: 2rem clamp(1.15rem, 2vw, 1.75rem) 2.4rem;
+  }
+
+  .reviews {
+    padding-top: 2rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .direct-panel {
+    padding: 2.2rem 2rem 1.8rem;
   }
 
   .direct ul {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .direct li + li {
-    border-top: 0;
-    border-left: 1px solid color-mix(in oklab, var(--dial) 28%, white);
-  }
-
-  .direct a {
-    display: block;
-    min-height: 100%;
-    padding: 0.2rem 1.15rem;
-  }
-
-  .direct strong {
-    display: block;
-    margin-bottom: 0.22rem;
-    font-size: 0.92rem;
-  }
-
-  .direct span {
-    display: block;
-    max-width: 24ch;
-    font-size: 0.8rem;
+    gap: 1rem;
   }
 
   .loved {
@@ -3301,10 +3360,6 @@ a {
 
   .fam:hover .fam-scene img {
     transform: scale(1.07);
-  }
-
-  .fam:hover .fam-scene img.is-metro {
-    transform: scale(1.04);
   }
 
   .fam:hover .fam-cta {
