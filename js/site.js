@@ -283,6 +283,24 @@
     ["pointerdown", "touchstart", "wheel"].forEach((evt) => {
       editGrid.addEventListener(evt, pauseEditAuto, { passive: true });
     });
+
+    const editNudge = (dir) => {
+      const card = editGrid.querySelector(".edit-card");
+      if (!card) return;
+      const gap = Number.parseFloat(getComputedStyle(editGrid).columnGap || getComputedStyle(editGrid).gap) || 0;
+      const stride = card.getBoundingClientRect().width + gap;
+      const max = editGrid.scrollWidth - editGrid.clientWidth - 4;
+      pauseEditAuto();
+      if (dir > 0 && editGrid.scrollLeft >= max) {
+        editGrid.scrollTo({ left: 0, behavior: reduce ? "auto" : "smooth" });
+      } else if (dir < 0 && editGrid.scrollLeft <= 4) {
+        editGrid.scrollTo({ left: max, behavior: reduce ? "auto" : "smooth" });
+      } else {
+        editGrid.scrollBy({ left: stride * dir, behavior: reduce ? "auto" : "smooth" });
+      }
+    };
+    document.querySelector("[data-edit-prev]")?.addEventListener("click", () => editNudge(-1));
+    document.querySelector("[data-edit-next]")?.addEventListener("click", () => editNudge(1));
     mobileEdit.addEventListener("change", () => {
       if (mobileEdit.matches) startEditAuto();
       else stopEditAuto();
