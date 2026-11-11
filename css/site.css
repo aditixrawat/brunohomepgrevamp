@@ -2044,6 +2044,54 @@ h3 em {
   transition: transform 0.9s var(--ease);
 }
 
+/* Mobile About us: the 1024x1536 banner is shown in two pieces (founders above the copy,
+   workshop below it). Rows ~640-900 of the image are a flat #181818, so the copy sits on
+   that same colour and the seams are invisible. Tablet (768-1023) keeps the 3-column layout. */
+@media (max-width: 767px) {
+  .house {
+    position: relative;
+    padding-top: 68.36%; /* founders piece: 700 / 1024 of the width */
+    padding-bottom: 66.02%; /* workshop piece: 676 / 1024 of the width */
+    background: #181818;
+  }
+
+  .house::before,
+  .house::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: url("../assets/house-bg-mobile.webp") no-repeat;
+    background-size: 100% auto;
+    pointer-events: none;
+  }
+
+  .house::before {
+    top: 0;
+    aspect-ratio: 1024 / 700;
+    background-position: top;
+  }
+
+  .house::after {
+    bottom: 0;
+    aspect-ratio: 1024 / 676;
+    background-position: bottom;
+  }
+
+  .house-founders,
+  .house-media {
+    display: none;
+  }
+
+  .house-copy {
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    text-align: center;
+    padding: 0.25rem var(--pad) 0.5rem;
+  }
+}
+
 .reels {
   --reel-gap: var(--tile);
   position: relative;
@@ -3159,6 +3207,25 @@ h3 em {
 }
 
 @media (min-width: 1024px) {
+  /* About us: the banner already contains the founders (left) and the workshop (right),
+     so the copy sits in the dark middle. The section keeps the banner's 2000x668 ratio so
+     nothing gets cropped. Below 1024px the three-column layout is used instead. */
+  .house {
+    grid-template-columns: 44% 30% 26%;
+    min-height: max(21rem, 33.4vw);
+    background: #161718 url("../assets/house-bg.webp") center / cover no-repeat;
+  }
+
+  .house-founders,
+  .house-media {
+    display: none;
+  }
+
+  .house-copy {
+    grid-column: 2;
+    padding: 2rem 1.75rem;
+  }
+
   .nav-links {
     display: flex;
     align-items: center;
