@@ -4028,7 +4028,7 @@ wa-carousel.reels-strip {
 }
 
 .series {
-  background: var(--ash);
+  background: var(--paper);
   color: var(--ink);
   scroll-margin-top: calc(var(--nav) + 0.5rem);
 }
@@ -4416,4 +4416,113 @@ wa-carousel.reels-strip {
 .details[hidden],
 .gifting[hidden] {
   display: none;
+}
+
+/* Steel Series: one continuous white field, the image blends into the copy. */
+.series-media {
+  background: var(--paper);
+}
+
+.series-media img {
+  object-fit: contain;
+}
+
+/* Steel Series: copy and image sit close together, centred as one unit. */
+.series {
+  padding: 2.5rem var(--pad) 2rem;
+  row-gap: 1rem;
+}
+
+.series-copy {
+  padding: 0;
+  align-items: flex-start;
+}
+
+.series h2 {
+  font-size: clamp(2.2rem, 9vw, 3.1rem);
+  color: var(--ink);
+}
+
+.series-copy > p:not(.series-tag) {
+  max-width: 32ch;
+  color: color-mix(in srgb, var(--ink) 78%, white);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.series-media {
+  position: static;
+  overflow: visible;
+}
+
+.series-media img {
+  position: static;
+  width: 100%;
+  height: clamp(17rem, 78vw, 24rem);
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (min-width: 768px) {
+  .series {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 24rem);
+    justify-content: center;
+    align-items: center;
+    column-gap: clamp(1.5rem, 4vw, 4rem);
+    min-height: 0;
+    padding: 3.5rem var(--pad);
+  }
+
+  .series-media img {
+    position: static;
+    width: 100%;
+    height: clamp(24rem, 34vw, 30rem);
+  }
+}
+
+/* Hero banner: copy sits at the bottom over the darker part of the photo, with a stronger veil for contrast. */
+.hero-veil {
+  background: linear-gradient(
+    180deg,
+    rgb(20 22 24 / 0.2) 0%,
+    transparent 30%,
+    rgb(20 22 24 / 0.45) 58%,
+    rgb(20 22 24 / 0.82) 100%
+  );
+}
+
+.hero-lead {
+  position: static;
+  transform: none;
+  left: auto;
+  right: auto;
+  max-width: 24rem;
+}
+
+.hero-copy h1 {
+  font-size: clamp(2.3rem, 10.5vw, 3.1rem);
+  line-height: 1.05;
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
+}
+
+.hero-copy p {
+  margin-top: 0.85rem;
+  max-width: 30ch;
+  font-size: 1.02rem;
+  line-height: 1.45;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.5);
+}
+
+.hero-actions {
+  margin-top: 1.4rem;
+}
+
+@media (min-width: 768px) {
+  .hero-lead {
+    max-width: none;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+  }
 }
