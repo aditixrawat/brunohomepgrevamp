@@ -327,7 +327,30 @@
     return type === "watch" || type === "watch set";
   };
 
-  const skuLink = ({ href, image, title, meta }) => {
+  // handle -> [rating, review count], a snapshot of the Judge.me ratings kept on each Shopify product.
+  const ratingsPromise = fetch("assets/ratings.json")
+    .then((response) => (response.ok ? response.json() : {}))
+    .catch(() => ({}));
+
+  const ratingRow = ([value, count]) => {
+    const row = document.createElement("span");
+    row.className = "sku-rating";
+    row.setAttribute("role", "img");
+    row.setAttribute("aria-label", `Rated ${value.toFixed(1)} out of 5 from ${count} ${count === 1 ? "review" : "reviews"}`);
+    const stars = document.createElement("span");
+    stars.className = "stars";
+    stars.style.setProperty("--r", value);
+    stars.setAttribute("aria-hidden", "true");
+    stars.textContent = "★★★★★";
+    const score = document.createElement("span");
+    score.className = "sku-rating-num";
+    score.setAttribute("aria-hidden", "true");
+    score.textContent = `${value.toFixed(1)} (${count})`;
+    row.append(stars, score);
+    return row;
+  };
+
+  const skuLink = ({ href, image, title, meta, rating }) => {
     const link = document.createElement("a");
     link.className = "sku";
     link.href = href;
@@ -343,6 +366,15 @@
     const name = document.createElement("strong");
     name.textContent = title;
     copy.append(name);
+    if (rating) {
+      copy.append(ratingRow(rating));
+    } else {
+      // Keep the same row height so names and prices line up across cards.
+      const spacer = document.createElement("span");
+      spacer.className = "sku-rating";
+      spacer.setAttribute("aria-hidden", "true");
+      copy.append(spacer);
+    }
     if (meta) {
       const price = document.createElement("span");
       price.className = "sku-price";
@@ -359,7 +391,8 @@
     return item;
   };
 
-  const paintLoved = (rail, products) => {
+  const paintLoved = async (rail, products) => {
+    const ratings = await ratingsPromise;
     rail.replaceChildren(
       ...products.map((product) =>
         carouselItem(
@@ -368,6 +401,7 @@
             image: sized(product.images?.[0]?.src),
             title: product.title,
             meta: rs(product.variants?.[0]?.price),
+            rating: ratings[product.handle],
           })
         )
       )
@@ -417,7 +451,7 @@
         )
         .slice(0, 10);
       if (!products.length) throw new Error("empty");
-      paintLoved(rail, products);
+      await paintLoved(rail, products);
     } catch (error) {
       failRail("arrivals");
     }
@@ -429,7 +463,7 @@
     try {
       const products = (await getSellers()).slice(0, 10);
       if (!products.length) throw new Error("empty");
-      paintLoved(rail, products);
+      await paintLoved(rail, products);
     } catch (error) {
       failRail("sellers");
     }
@@ -467,16 +501,16 @@
   const faces = ["sora", "outfit", "syne", "onest", "urbanist", "archivo", "familjen"];
   const faceSelects = [...document.querySelectorAll("[data-face-select]")];
   const applyFace = window.applyBrunoFace || ((value) => {
-    const face = faces.includes(value) ? value : "sora";
+    const face = faces.includes(value) ? value : "onest";
     document.documentElement.setAttribute("data-face", face);
     try {
-      localStorage.setItem("bruno-face", face);
+      localStorage.setItem("bruno-face-2", face);
     } catch (e) {}
     faceSelects.forEach((el) => {
       if (el.value !== face) el.value = face;
     });
   });
-  applyFace(document.documentElement.getAttribute("data-face") || "sora");
+  applyFace(document.documentElement.getAttribute("data-face") || "onest");
   faceSelects.forEach((el) => {
     el.addEventListener("input", () => applyFace(el.value));
     el.addEventListener("change", () => applyFace(el.value));

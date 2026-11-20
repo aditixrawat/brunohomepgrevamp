@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-face="sora">
+<html lang="en" data-face="onest">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -7,17 +7,17 @@
       (function () {
         var allowed = { sora: 1, outfit: 1, syne: 1, onest: 1, urbanist: 1, archivo: 1, familjen: 1 };
         window.applyBrunoFace = function (face) {
-          if (!allowed[face]) face = "sora";
+          if (!allowed[face]) face = "onest";
           document.documentElement.setAttribute("data-face", face);
           try {
-            localStorage.setItem("bruno-face", face);
+            localStorage.setItem("bruno-face-2", face);
           } catch (e) {}
           document.querySelectorAll("[data-face-select]").forEach(function (el) {
             if (el.value !== face) el.value = face;
           });
         };
         try {
-          var stored = localStorage.getItem("bruno-face");
+          var stored = localStorage.getItem("bruno-face-2");
           if (allowed[stored]) window.applyBrunoFace(stored);
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       href="https://cdn.shopify.com/s/files/1/0888/8929/5134/files/simple-replace_in_output-1790747430833-fauc4.jpg?v=1790747433"
       media="(min-width: 768px)"
     />
-    <link rel="stylesheet" href="css/site.css?v=wa128" />
+    <link rel="stylesheet" href="css/site.css?v=wa133" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -179,44 +179,80 @@
         </div>
       </section>
 
-      <section class="promises" aria-label="Origin, reviews, and materials">
+      <section class="promises" aria-label="Rating, delivery, and returns">
         <ul>
           <li>
-            <a href="https://www.brunomilano.com/pages/about-us">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-                <path d="M12 21.2s6.2-5.4 6.2-10.1a6.2 6.2 0 1 0-12.4 0c0 4.7 6.2 10.1 6.2 10.1z" />
-                <circle cx="12" cy="11" r="2.05" />
-              </svg>
-              <strong>Made in India</strong>
-              <span>Designed and made here</span>
-            </a>
-          </li>
-          <li>
             <a href="#reviews">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-                <circle cx="9" cy="8" r="2.15" />
-                <circle cx="15.3" cy="8.7" r="1.7" />
-                <path d="M4.7 18.4c.55-2.7 2.35-4.15 4.3-4.15s3.75 1.45 4.3 4.15" />
-                <path d="M13.2 14.5c1.25-.45 2.55-.35 3.55.45.85.7 1.45 1.9 1.75 3.45" />
-              </svg>
-              <strong>184 reviews</strong>
-              <span>Verified buyers</span>
+              <span class="stars" style="--r: 4.8" aria-hidden="true">★★★★★</span>
+              <strong>4.8 / 5 rating</strong>
+              <span>200+ verified buyers</span>
             </a>
           </li>
           <li>
-            <a href="https://www.brunomilano.com/pages/about-us">
+            <a href="https://www.brunomilano.com/policies/shipping-policy">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
-                <path d="M8.1 3.6h7.8l2.15 4.15L12 20.4 5.95 7.75z" />
-                <path d="M5.95 7.75h12.1" />
-                <path d="M12 7.75 8.1 3.6" />
-                <path d="M12 7.75 15.9 3.6" />
-                <path d="M12 7.75v12.65" />
+                <path d="M3 6.5h11v9.5H3z" />
+                <path d="M14 9.5h4l3 3V16h-7z" />
+                <circle cx="7.5" cy="17.7" r="1.7" />
+                <circle cx="17" cy="17.7" r="1.7" />
               </svg>
-              <strong>Premium materials</strong>
-              <span>Sapphire-coated glass</span>
+              <strong>Free delivery*</strong>
+              <span>Pan-India · ships in 24h</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.brunomilano.com/pages/return-and-exchange-policy">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">
+                <path d="M4.5 12a7.5 7.5 0 0 1 13-5.1L19.5 9" />
+                <path d="M19.5 4.5V9H15" />
+                <path d="M19.5 12a7.5 7.5 0 0 1-13 5.1L4.5 15" />
+                <path d="M4.5 19.5V15H9" />
+              </svg>
+              <strong>7-day returns</strong>
+              <span>No questions, no fuss</span>
             </a>
           </li>
         </ul>
+      </section>
+
+      <section class="series" aria-labelledby="series-title">
+        <div class="series-copy">
+          <p class="series-tag">Featured</p>
+          <h2 id="series-title">The <em>Steel Series</em></h2>
+          <p>A grade above the rest – even higher quality materials from full stainless steel to genuine leather.</p>
+          <a class="series-link" href="https://www.brunomilano.com/collections/stainless-steel">Shop the Steel Series <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="series-media">
+          <img
+            src="assets/detail-box.jpg"
+            alt="A stainless steel Bruno Milano diver in its green gift box with the warranty card"
+            width="2000"
+            height="2000"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </section>
+
+      <section class="details" aria-labelledby="details-title">
+        <div class="details-copy">
+          <h2 id="details-title">Details that <em>count.</em></h2>
+          <ul>
+            <li>Logo on the crown</li>
+            <li>City-scape caseback</li>
+            <li>Scratch-resistant sapphire-coated glass</li>
+          </ul>
+        </div>
+        <div class="details-media">
+          <img
+            src="assets/detail-crown.jpg"
+            alt="A Bruno Milano watch with a green dial and gold crown"
+            width="1932"
+            height="1932"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </section>
 
       <section class="highlights" id="highlights" aria-labelledby="highlights-title">
@@ -246,7 +282,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Doppio Chrono</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/doppio-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -266,7 +301,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Ambrosiana Chic</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/ambrosiana-cut.png?v=cut4" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -286,7 +320,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Vittorio Chrono</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/vittorio-cut.png?v=cut2" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -306,7 +339,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Duomo Heritage</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/duomo-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -326,7 +358,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Metropolis Classic</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/metropolis-cut.png" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -346,7 +377,6 @@
                   />
                   <div class="fam-scene-copy">
                     <h3>Venezia</h3>
-                    <span>See the family</span>
                   </div>
                 </div>
                 <img class="fam-watch" src="assets/venezia-cut.png?v=cut2" alt="" width="800" height="800" loading="lazy" decoding="async" />
@@ -831,28 +861,46 @@
             <li>
               <a href="https://www.brunomilano.com/collections/all">
                 <img src="assets/direct/full-edit.jpg" alt="" width="480" height="480" loading="lazy" decoding="async" />
-                <strong>The full edit</strong>
+                <strong>Full collection</strong>
               </a>
             </li>
             <li>
               <a href="https://www.brunomilano.com/collections/all">
                 <img src="assets/direct/brand-price.jpg" alt="" width="480" height="480" loading="lazy" decoding="async" />
-                <strong>Brand price</strong>
+                <strong>Direct prices</strong>
               </a>
             </li>
             <li>
-              <a href="https://www.brunomilano.com/pages/about-us">
+              <a href="https://www.brunomilano.com/products/engraving">
                 <img src="assets/direct/packed.jpg" alt="" width="480" height="480" loading="lazy" decoding="async" />
-                <strong>Packed by us</strong>
+                <strong>Get it engraved!</strong>
               </a>
             </li>
             <li>
               <a href="https://www.brunomilano.com/pages/warranty-registration">
                 <img src="assets/direct/warranty.jpg" alt="" width="480" height="480" loading="lazy" decoding="async" />
-                <strong>Warranty with us</strong>
+                <strong>Easier to register your warranty</strong>
               </a>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section class="gifting" aria-labelledby="gifting-title">
+        <div class="gifting-copy">
+          <h2 id="gifting-title">Corporate <em>gifting</em></h2>
+          <p>From the catalogue. Box, bag, and co-branding from 50 pieces.</p>
+          <a class="btn btn-light" href="corporate-gifting.html">Enquire now</a>
+        </div>
+        <div class="gifting-media">
+          <img
+            src="assets/box.jpg"
+            alt="A Bruno Milano watch beside its green gift box"
+            width="1400"
+            height="1400"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </section>
     </main>
@@ -959,6 +1007,16 @@
       </div>
     </footer>
 
-    <script src="js/site.js?v=wa51" defer></script>
+    <a
+      class="wa-bubble"
+      href="https://wa.me/918920663146"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Chat with us on WhatsApp"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.2 1.6 6L4 27l6.2-1.6c1.7 1 3.7 1.5 5.8 1.5 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.9 0-3.7-.5-5.3-1.5l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.6-3.5-1.6-5.5C5.8 9.5 10.4 4.9 16 4.9S26.2 9.5 26.2 15 21.6 24.8 16 24.8zm5.6-7.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.6.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z"></path></svg>
+    </a>
+
+    <script src="js/site.js?v=wa53" defer></script>
   </body>
 </html>
