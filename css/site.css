@@ -90,7 +90,7 @@
   --white: #fafafa;
   --panel: #f0f1f2;
   --band: #0d4a2b;
-  --gold: #c8a25b;
+  --gold: oklch(0.78 0.15 80);
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --nav: 56px;
   --pad: max(1.15rem, env(safe-area-inset-left, 0px));
@@ -2301,8 +2301,8 @@ h3 em {
 
 .lux-footer {
   --accent: #0d4a2b;
-  --gold: #c8a25b;
-  --gold-light: #d7a12e;
+  --gold: var(--star-gold);
+  --gold-light: var(--star-gold);
   padding: 50px 56px 56px;
   background: linear-gradient(160deg, #062414 0%, var(--accent) 45%, #082a1a 100%);
   color: #fff;
@@ -3594,7 +3594,7 @@ h3 em {
 }
 
 #sequence-section {
-  --gold-light: #d7a12e;
+  --gold-light: var(--star-gold);
   position: relative;
   height: 280vh;
   background: var(--ash);
@@ -3630,7 +3630,7 @@ h3 em {
   justify-content: center;
   width: fit-content;
   padding: 12px 28px;
-  border: 1px solid rgb(200 162 91 / 0.5);
+  border: 1px solid color-mix(in srgb, var(--star-gold) 55%, transparent);
   border-radius: 999px;
   background: rgb(255 255 255 / 0.88);
   color: var(--gold-light);
