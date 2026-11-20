@@ -83,6 +83,7 @@
   --dial-deep: oklch(0.32 0.075 155);
   --dial-wash: oklch(0.94 0.035 155);
   --dial-on-night: oklch(0.86 0.08 155);
+  --champagne: #e6d3a3;
   --line: #ececee;
   --line-steel: color-mix(in srgb, var(--steel) 28%, var(--line));
   --white: #fafafa;
@@ -1862,7 +1863,7 @@ h3 em {
 .reviews-head h2 em {
   font-style: italic;
   font-weight: 500;
-  color: var(--dial-on-night);
+  color: var(--champagne);
 }
 
 .reviews-note {
@@ -4158,7 +4159,7 @@ wa-carousel.reels-strip {
 }
 
 .gifting h2 em {
-  color: var(--dial-on-night);
+  color: var(--champagne);
 }
 
 .gifting-copy > p {
@@ -4250,7 +4251,7 @@ wa-carousel.reels-strip {
 .gift-hero h1 em {
   font-style: italic;
   font-weight: 500;
-  color: var(--dial-on-night);
+  color: var(--champagne);
 }
 
 .gift-offers {
@@ -4410,4 +4411,9 @@ wa-carousel.reels-strip {
   .gift-offers ul {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+.details[hidden],
+.gifting[hidden] {
+  display: none;
 }

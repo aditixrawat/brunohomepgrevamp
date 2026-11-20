@@ -350,7 +350,7 @@
     return row;
   };
 
-  const skuLink = ({ href, image, title, meta, rating }) => {
+  const skuLink = ({ href, image, title, meta, rating, noRow }) => {
     const link = document.createElement("a");
     link.className = "sku";
     link.href = href;
@@ -368,7 +368,7 @@
     copy.append(name);
     if (rating) {
       copy.append(ratingRow(rating));
-    } else {
+    } else if (!noRow) {
       // Keep the same row height so names and prices line up across cards.
       const spacer = document.createElement("span");
       spacer.className = "sku-rating";
@@ -391,7 +391,7 @@
     return item;
   };
 
-  const paintLoved = async (rail, products) => {
+  const paintLoved = async (rail, products, showRatings = true) => {
     const ratings = await ratingsPromise;
     rail.replaceChildren(
       ...products.map((product) =>
@@ -401,7 +401,8 @@
             image: sized(product.images?.[0]?.src),
             title: product.title,
             meta: rs(product.variants?.[0]?.price),
-            rating: ratings[product.handle],
+            rating: showRatings ? ratings[product.handle] : undefined,
+            noRow: !showRatings,
           })
         )
       )
@@ -451,7 +452,7 @@
         )
         .slice(0, 10);
       if (!products.length) throw new Error("empty");
-      await paintLoved(rail, products);
+      await paintLoved(rail, products, false);
     } catch (error) {
       failRail("arrivals");
     }
