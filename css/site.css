@@ -83,7 +83,8 @@
   --dial-deep: oklch(0.32 0.075 155);
   --dial-wash: oklch(0.94 0.035 155);
   --dial-on-night: oklch(0.86 0.08 155);
-  --champagne: #e6d3a3;
+  --champagne: oklch(0.78 0.15 80);
+  --star-gold: oklch(0.78 0.15 80);
   --line: #ececee;
   --line-steel: color-mix(in srgb, var(--steel) 28%, var(--line));
   --white: #fafafa;
@@ -1902,7 +1903,7 @@ h3 em {
 
 .review-stars {
   margin: 0;
-  color: var(--gold);
+  color: var(--star-gold);
   font-size: 1.05rem;
   letter-spacing: 0.22em;
   line-height: 1;
@@ -3967,7 +3968,7 @@ wa-carousel.reels-strip {
 /* Star rating: --r is the rating out of 5, the gold part of the row follows it. */
 .stars {
   --r: 5;
-  --star-on: oklch(0.78 0.15 80);
+  --star-on: var(--star-gold);
   --star-off: #d3d5d7;
   display: inline-block;
   font-size: 0.85rem;
