@@ -4527,3 +4527,348 @@ wa-carousel.reels-strip {
     font-size: clamp(2.2rem, 4vw, 3.2rem);
   }
 }
+
+/* Touch micro-interactions: every tappable thing gives instant press feedback. */
+@media (hover: none), (pointer: coarse) {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn,
+  .nav-menu,
+  .nav-trigger,
+  .series-link,
+  .sequence-buy-btn,
+  .sku,
+  .fam,
+  .reel,
+  .edit-card,
+  .promises a,
+  .wa-bubble,
+  .type-switch,
+  .reels-nav,
+  .ft-acc-btn,
+  .gift-form button,
+  .ft-gift-form button,
+  [data-carousel-prev],
+  [data-carousel-next],
+  [data-edit-prev],
+  [data-edit-next],
+  .nav-mark,
+  .social a {
+    transition:
+      scale 0.18s var(--ease),
+      transform 0.3s var(--ease),
+      opacity 0.18s var(--ease),
+      filter 0.18s var(--ease),
+      background-color 0.2s var(--ease),
+      color 0.2s var(--ease),
+      border-color 0.2s var(--ease);
+    touch-action: manipulation;
+  }
+
+  .btn:active,
+  .nav-menu:active,
+  .nav-trigger:active,
+  .sequence-buy-btn:active,
+  .wa-bubble:active,
+  .type-switch:active,
+  .reels-nav:active,
+  .gift-form button:active,
+  .ft-gift-form button:active,
+  [data-carousel-prev]:active,
+  [data-carousel-next]:active,
+  [data-edit-prev]:active,
+  [data-edit-next]:active,
+  .social a:active {
+    scale: 0.93;
+    filter: brightness(0.92);
+  }
+
+  .sku:active,
+  .fam:active,
+  .reel:active,
+  .edit-card:active,
+  .promises a:active {
+    scale: 0.975;
+    opacity: 0.9;
+  }
+
+  .series-link:active,
+  .ft-acc-btn:active,
+  .nav-mark:active {
+    scale: 0.97;
+    opacity: 0.7;
+  }
+
+  .btn:active::after {
+    transform: scaleX(1);
+  }
+
+  .wa-bubble:active {
+    scale: 0.88;
+  }
+
+  /* Plain text links dim while pressed. */
+  main a:not([class]):active,
+  .lux-footer a:active {
+    opacity: 0.65;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:active,
+  .nav-menu:active,
+  .nav-trigger:active,
+  .sequence-buy-btn:active,
+  .wa-bubble:active,
+  .type-switch:active,
+  .reels-nav:active,
+  .gift-form button:active,
+  .ft-gift-form button:active,
+  [data-carousel-prev]:active,
+  [data-carousel-next]:active,
+  [data-edit-prev]:active,
+  [data-edit-next]:active,
+  .social a:active,
+  .sku:active,
+  .fam:active,
+  .reel:active,
+  .edit-card:active,
+  .promises a:active,
+  .series-link:active,
+  .ft-acc-btn:active,
+  .nav-mark:active {
+    scale: 1;
+  }
+}
+
+/* Scroll animations: each runs once when its section enters the view. */
+@keyframes star-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes box-settle {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem) rotate(-4deg) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes drift-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes banner-zoom {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-banner-m {
+    animation: banner-zoom 9s var(--ease) both;
+  }
+
+  /* Trust strip: items arrive one after another, stars wipe in. */
+  .promises.is-in li {
+    animation: drift-in 0.6s var(--ease) both;
+  }
+
+  .promises.is-in li:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .promises.is-in li:nth-child(2) {
+    animation-delay: 0.25s;
+  }
+
+  .promises.is-in li:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  .promises.is-in .stars,
+  .loved.is-in .sku .stars {
+    animation: star-wipe 0.9s var(--ease) 0.35s both;
+  }
+
+  /* Steel Series: the box settles in, the gold word gets underlined. */
+  .series.is-in .series-media img {
+    animation: box-settle 1s var(--ease) 0.15s both;
+  }
+
+  .series h2 em:not(.em-in) {
+    --ul: 0%;
+  }
+
+  /* Product cards arrive in turn. */
+  .loved.is-in .sku {
+    animation: drift-in 0.55s var(--ease) both;
+  }
+
+  .loved.is-in wa-carousel-item:nth-child(2) .sku {
+    animation-delay: 0.08s;
+  }
+
+  .loved.is-in wa-carousel-item:nth-child(3) .sku {
+    animation-delay: 0.16s;
+  }
+
+  .loved.is-in wa-carousel-item:nth-child(4) .sku {
+    animation-delay: 0.24s;
+  }
+
+  .loved.is-in wa-carousel-item:nth-child(n + 5) .sku {
+    animation-delay: 0.32s;
+  }
+
+  /* Reviews: cards drift in, the gold word catches the light once. */
+  .reviews.is-in .review {
+    animation: drift-in 0.7s var(--ease) both;
+  }
+
+  .reviews.is-in .review:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+
+  .reviews.is-in .review:nth-child(2) {
+    animation-delay: 0.35s;
+  }
+
+  .reviews.is-in .review:nth-child(3) {
+    animation-delay: 0.5s;
+  }
+
+}
+
+/* Trust strip: the three figures read at the same size and weight. */
+.promises strong span {
+  display: inline;
+  max-width: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.promises .stars,
+.promises svg {
+  height: 1.45rem;
+}
+
+.promises .stars {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .promises .stars,
+  .promises svg {
+    height: 1.85rem;
+  }
+
+  .promises .stars {
+    font-size: 1.4rem;
+  }
+}
+
+/* Italic gold/green words: a soft shine passes through three times while the word is on screen, and again each time it comes back into view. */
+@property --sx {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --ul {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@keyframes em-shine {
+  0% {
+    --sx: 100%;
+    -webkit-text-fill-color: transparent;
+  }
+  22%,
+  100% {
+    --sx: 0%;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@keyframes underline-draw {
+  from {
+    --ul: 0%;
+  }
+  to {
+    --ul: 100%;
+  }
+}
+
+h1 em,
+h2 em,
+h3 em {
+  background-image:
+    linear-gradient(100deg, transparent 40%, color-mix(in srgb, currentColor 25%, #fff) 50%, transparent 60%),
+    linear-gradient(currentColor, currentColor);
+  background-size: 250% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: var(--sx) 0, 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Italic glyphs overhang their box; extra padding keeps the clipped fill from cutting them. */
+  padding: 0.06em 0.16em 0.12em 0.06em;
+  margin: 0 -0.16em 0 -0.06em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.series h2 em {
+  padding-bottom: 0.12em;
+  background-image:
+    linear-gradient(var(--star-gold), var(--star-gold)),
+    linear-gradient(100deg, transparent 40%, color-mix(in srgb, currentColor 25%, #fff) 50%, transparent 60%),
+    linear-gradient(currentColor, currentColor);
+  background-size: var(--ul) 2px, 250% 100%, 100% 100%;
+  background-position: left bottom, var(--sx) 0, 0 0;
+  -webkit-background-clip: border-box, text, text;
+  background-clip: border-box, text, text;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  h1 em.em-in,
+  h2 em.em-in,
+  h3 em.em-in {
+    animation: em-shine 6.5s ease-out 0.35s 3;
+  }
+
+  .series h2 em.em-in {
+    animation:
+      underline-draw 0.9s var(--ease) 0.6s both,
+      em-shine 6.5s ease-out 0.35s 3;
+  }
+}

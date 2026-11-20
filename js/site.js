@@ -1,4 +1,6 @@
 (() => {
+  // iOS Safari only applies :active (touch press feedback) when a touch listener exists.
+  document.addEventListener("touchstart", () => {}, { passive: true });
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const nav = document.querySelector("[data-nav]");
   const hero = document.querySelector(".hero");
@@ -473,7 +475,7 @@
   loadArrivals();
   loadSellers();
 
-  const reveal = [...document.querySelectorAll(".promises, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .lux-footer")];
+  const reveal = [...document.querySelectorAll(".promises, .series, .loved, .edit, .split, .view, .highlights, .reviews, .house, .reels, .lux-footer")];
   if (reveal.length) {
     const markIn = (el) => el.classList.add("is-in");
     if (reduce) {
@@ -488,15 +490,67 @@
             }
           });
         },
-        { threshold: 0.15, rootMargin: "0px 0px 12% 0px" }
+        { threshold: 0, rootMargin: "0px 0px -15% 0px" }
       );
       reveal.forEach((el) => {
         el.classList.add("will-reveal");
         const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.92 && rect.bottom > 0) markIn(el);
+        if (rect.top < window.innerHeight * 0.85 && rect.bottom > 0) markIn(el);
         else watchIn.observe(el);
       });
     }
+  }
+
+  // Italic headline words: mark each one when it lands on screen so its shine plays then.
+  const ems = [...document.querySelectorAll("h1 em, h2 em, h3 em")];
+  if ("IntersectionObserver" in window && !reduce) {
+    const emWatch = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // On entry the shine starts (a few passes); on exit it resets so it plays again next time.
+          entry.target.classList.toggle("em-in", entry.isIntersecting);
+        });
+      },
+      { threshold: 0.6, rootMargin: "0px 0px -10% 0px" }
+    );
+    ems.forEach((el) => emWatch.observe(el));
+  } else {
+    ems.forEach((el) => el.classList.add("em-in"));
+  }
+
+  // Count-up numbers: run once when they scroll into view.
+  const counters = [...document.querySelectorAll("[data-count]")];
+  if (counters.length && !reduce && "IntersectionObserver" in window) {
+    const run = (el) => {
+      const end = parseFloat(el.dataset.count);
+      const dec = parseInt(el.dataset.dec || "0", 10);
+      const start = performance.now();
+      const dur = 1100;
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (end * eased).toFixed(dec);
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      el.textContent = (0).toFixed(dec);
+      requestAnimationFrame(tick);
+      // If the tab is in the background and frames are paused, still land on the real number.
+      setTimeout(() => {
+        el.textContent = end.toFixed(dec);
+      }, dur + 250);
+    };
+    const countWatch = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            run(entry.target);
+            countWatch.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+    counters.forEach((el) => countWatch.observe(el));
   }
 
   const faces = ["sora", "outfit", "syne", "onest", "urbanist", "archivo", "familjen"];
