@@ -4872,3 +4872,235 @@ h3 em {
       em-shine 6.5s ease-out 0.35s 3;
   }
 }
+
+.reviews-badge a{color:inherit;text-decoration:none}
+.reviews-badge a:hover{text-decoration:underline;text-underline-offset:.2em}
+
+/* "Shop the brand, direct." sits in a visible box instead of floating on the page. */
+.direct-panel {
+  max-width: 72rem;
+  padding: 2rem 1.25rem 1.75rem;
+  background: var(--mist);
+  border: 1px solid var(--line);
+  border-radius: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .direct-panel {
+    padding: 2.75rem 2.5rem 2.5rem;
+  }
+}
+
+/* Steel Series: full-width tinted band, larger, so it stands out from the white page.
+   The product shot is on white, so it multiplies into the tint and stays seamless. */
+.series {
+  --series-bg: oklch(0.88 0.055 155);
+  background: var(--series-bg);
+  padding: 3.25rem var(--pad) 3rem;
+  row-gap: 1.5rem;
+}
+
+.series-media {
+  background: transparent;
+}
+
+.series-media img {
+  height: clamp(20rem, 92vw, 30rem);
+  mix-blend-mode: multiply;
+}
+
+.series h2 {
+  font-size: clamp(2.6rem, 12vw, 3.8rem);
+}
+
+.series-copy > p:not(.series-tag) {
+  max-width: 34ch;
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+@media (min-width: 768px) {
+  .series {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 6vw, 7rem);
+    padding: clamp(4rem, 7vw, 6.5rem) max(var(--pad), 5vw);
+  }
+
+  .series-copy {
+    justify-self: end;
+    max-width: 34rem;
+  }
+
+  .series h2 {
+    font-size: clamp(3.4rem, 6vw, 5.4rem);
+  }
+
+  .series-copy > p:not(.series-tag) {
+    font-size: 1.2rem;
+  }
+
+  .series-media {
+    justify-self: start;
+    width: 100%;
+    max-width: 38rem;
+  }
+
+  .series-media img {
+    height: clamp(28rem, 42vw, 40rem);
+  }
+}
+
+/* Steel Series: full-bleed photo with the copy laid over it. */
+.series {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 44rem;
+  padding: 0;
+  background: var(--night);
+  color: var(--white);
+}
+
+.series-bg,
+.series-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.series-bg {
+  z-index: -2;
+}
+
+.series-bg img {
+  display: block;
+  object-fit: cover;
+  object-position: 50% 30%;
+  mix-blend-mode: normal;
+}
+
+.series::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, rgb(8 12 10 / 0.9) 0%, rgb(8 12 10 / 0.62) 32%, rgb(8 12 10 / 0) 62%);
+}
+
+.series-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 var(--pad-r) 2.5rem var(--pad);
+  align-items: flex-start;
+}
+
+.series h2,
+.series-copy > p:not(.series-tag) {
+  color: var(--white);
+  text-shadow: 0 1px 18px rgb(0 0 0 / 0.45);
+}
+
+.series h2 em {
+  color: var(--white);
+}
+
+.series-link {
+  color: var(--white);
+}
+
+.series-link:focus-visible {
+  outline-color: var(--white);
+}
+
+@media (min-width: 768px) {
+  .series {
+    min-height: clamp(34rem, 56.25vw, 54rem);
+    padding: 0;
+  }
+
+  .series-bg img {
+    object-position: 70% 30%;
+  }
+
+  .series::before {
+    background: linear-gradient(to right, rgb(8 12 10 / 0.82) 0%, rgb(8 12 10 / 0.5) 38%, rgb(8 12 10 / 0) 62%);
+  }
+
+  .series-copy {
+    top: 0;
+    right: auto;
+    justify-content: center;
+    width: min(38rem, 52%);
+    max-width: none;
+    justify-self: auto;
+    padding: 0 0 0 max(var(--pad), 6vw);
+  }
+
+  .series h2 {
+    font-size: clamp(3.2rem, 5.6vw, 5.2rem);
+  }
+}
+
+/* Steel Series: no gold underline, single-line heading, shorter frame. */
+.series h2 em,
+.series h2 em.em-in {
+  background-image:
+    linear-gradient(100deg, transparent 40%, color-mix(in srgb, currentColor 25%, #fff) 50%, transparent 60%),
+    linear-gradient(currentColor, currentColor);
+  background-size: 250% 100%, 100% 100%;
+  background-position: var(--sx) 0, 0 0;
+  -webkit-background-clip: text, text;
+  background-clip: text, text;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .series h2 em.em-in {
+    animation: em-shine 6.5s ease-out 0.35s 3;
+  }
+}
+
+.series-bg img {
+  object-position: 50% 22%;
+}
+
+.series-copy {
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .series {
+    min-height: clamp(26rem, 38vw, 40rem);
+  }
+
+  .series-bg img {
+    object-position: 70% 25%;
+  }
+
+  .series-copy {
+    width: min(46rem, 58%);
+    padding: 0 0 0 max(var(--pad), 7vw);
+  }
+
+  .series h2 {
+    margin-bottom: 1rem;
+    font-size: clamp(2.8rem, 4.6vw, 4.6rem);
+    white-space: nowrap;
+  }
+
+  .series-copy > p:not(.series-tag) {
+    max-width: 30ch;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Steel Series: taller frame on desktop. */
+@media (min-width: 768px) {
+  .series {
+    min-height: clamp(30rem, 47vw, 50rem);
+  }
+}
