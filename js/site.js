@@ -352,7 +352,88 @@
     return row;
   };
 
-  const skuLink = ({ href, image, title, meta, rating, noRow }) => {
+  // Browsable product images: arrows and dots on the card, and on devices with a
+  // pointer the second image fades in on hover. Extra images load on demand.
+  // Listeners are delegated because the carousel clones cards (clones lose listeners).
+  const canHover = window.matchMedia("(hover: hover)");
+  const ARROW_PATHS = {
+    prev: "M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z",
+    next: "M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z",
+  };
+
+  const showImage = (media, to) => {
+    const imgs = [...media.querySelectorAll(":scope > img")];
+    const dots = [...media.querySelectorAll(".sku-dots i")];
+    const index = (to + imgs.length) % imgs.length;
+    imgs.forEach((el, n) => {
+      if (n === index && el.dataset.src) {
+        el.src = el.dataset.src;
+        delete el.dataset.src;
+      }
+      el.classList.toggle("is-active", n === index);
+      if (dots[n]) dots[n].classList.toggle("is-on", n === index);
+    });
+    media.dataset.index = String(index);
+  };
+
+  const buildGallery = (first, srcs, title) => {
+    const list = (srcs || []).filter(Boolean).slice(0, 5);
+    if (list.length < 2) return null;
+    const media = document.createElement("div");
+    media.className = "sku-media";
+    const imgs = list.map((src, i) => {
+      if (i === 0) return first;
+      const el = document.createElement("img");
+      el.alt = `${title}, image ${i + 1}`;
+      el.width = 900;
+      el.height = 900;
+      el.decoding = "async";
+      if (i === 1) {
+        el.loading = "lazy";
+        el.src = src;
+      } else {
+        el.dataset.src = src;
+      }
+      return el;
+    });
+    const arrow = (dir) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `sku-nav sku-nav-${dir}`;
+      btn.dataset.dir = dir;
+      btn.setAttribute("aria-label", dir === "prev" ? "Previous image" : "Next image");
+      btn.innerHTML = `<svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="${ARROW_PATHS[dir]}"/></svg>`;
+      return btn;
+    };
+    const dots = document.createElement("div");
+    dots.className = "sku-dots";
+    dots.setAttribute("aria-hidden", "true");
+    list.forEach(() => dots.appendChild(document.createElement("i")));
+    media.append(...imgs, arrow("prev"), arrow("next"), dots);
+    showImage(media, 0);
+    return media;
+  };
+
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest?.(".sku-nav");
+    if (!btn) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const media = btn.closest(".sku-media");
+    media.dataset.browsed = "1";
+    showImage(media, Number(media.dataset.index || 0) + (btn.dataset.dir === "prev" ? -1 : 1));
+  }, true);
+
+  const hoverSwap = (event, to) => {
+    if (!canHover.matches) return;
+    const media = event.target.closest?.(".sku-media");
+    if (!media || media.dataset.browsed || media.contains(event.relatedTarget)) return;
+    showImage(media, to);
+  };
+  document.addEventListener("mouseover", (event) => hoverSwap(event, 1));
+  document.addEventListener("mouseout", (event) => hoverSwap(event, 0));
+
+  const skuLink = ({ href, image, images, title, meta, rating, noRow }) => {
     const link = document.createElement("a");
     link.className = "sku";
     link.href = href;
@@ -383,7 +464,8 @@
       price.textContent = meta;
       copy.append(price);
     }
-    link.append(img, copy);
+    const media = buildGallery(img, images, title);
+    link.append(media || img, copy);
     return link;
   };
 
@@ -401,6 +483,7 @@
           skuLink({
             href: `${STORE}/products/${product.handle}`,
             image: sized(product.images?.[0]?.src),
+            images: (product.images || []).map((im) => sized(im.src)),
             title: product.title,
             meta: rs(product.variants?.[0]?.price),
             rating: showRatings ? ratings[product.handle] : undefined,

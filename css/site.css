@@ -5104,3 +5104,208 @@ h3 em {
     min-height: clamp(30rem, 47vw, 50rem);
   }
 }
+
+/* ---- Edits from the Helium review (24 Nov) ---- */
+
+/* The logo's own gold, used for the accents added in this round. */
+:root {
+  --logo-gold: #f8a824;
+}
+
+/* Tighter vertical rhythm: the page was running long. */
+:root {
+  --section: 2rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section: 3.25rem;
+  }
+}
+
+.highlights {
+  padding-top: 1.75rem;
+}
+
+.view {
+  padding-top: 1.5rem;
+}
+
+/* The reels strip kept a 9:16 box on desktop and left a big gap under the tiles. */
+wa-carousel.reels-strip::part(scroll-container) {
+  aspect-ratio: auto;
+  height: auto;
+}
+
+/* More gold, as accents taken from the logo. */
+.series-tag {
+  background: var(--logo-gold);
+  color: var(--ink);
+}
+
+.series h2 em {
+  color: var(--logo-gold);
+}
+
+.promises svg {
+  color: var(--logo-gold);
+}
+
+/* Product cards: browsable images, second image on hover. */
+.sku-media {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.sku-rail .sku .sku-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.sku-rail .sku .sku-media img.is-active {
+  opacity: 1;
+}
+
+.sku-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-top: -1.125rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sku-nav svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.sku-nav-prev {
+  left: 0.35rem;
+}
+
+.sku-nav-next {
+  right: 0.35rem;
+}
+
+.sku-media:hover .sku-nav,
+.sku-nav:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .sku-nav {
+    opacity: 1;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -1rem;
+  }
+}
+
+.sku-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.4rem;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  pointer-events: none;
+}
+
+.sku-dots i {
+  display: block;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+}
+
+.sku-dots i.is-on {
+  background: var(--logo-gold);
+}
+
+/* "Why buy direct?": square box like the rest of the page, no icons. */
+.direct-panel {
+  max-width: none;
+  padding: 2.25rem 1.25rem 2rem;
+  background: var(--mist);
+  border: 0;
+  border-radius: 0;
+}
+
+.direct h2 {
+  margin: 0;
+}
+
+.direct h2 em {
+  color: var(--dial);
+}
+
+.direct-sub {
+  margin: 0.6rem 0 1.75rem;
+  color: var(--mute);
+  font-size: 1rem;
+}
+
+.direct ul {
+  gap: 0.75rem;
+}
+
+.direct li {
+  border-top: 2px solid var(--logo-gold);
+  background: var(--paper);
+}
+
+.direct a {
+  align-content: center;
+  min-height: 4.25rem;
+  padding: 0.9rem 0.75rem;
+}
+
+.direct strong {
+  max-width: none;
+  font-size: 0.95rem;
+}
+
+@media (min-width: 768px) {
+  .direct ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .direct-panel {
+    padding: 2.75rem 2.5rem 2.5rem;
+  }
+}
+
+/* "Why buy direct?": illustrations are back above each point. */
+.direct a {
+  min-height: 0;
+  padding: 1.1rem 0.75rem 1rem;
+}
+
+.direct img {
+  width: min(100%, 8rem);
+}
+
+.direct h2 {
+  margin: 1rem 0 0;
+}
