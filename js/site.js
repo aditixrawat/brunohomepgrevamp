@@ -703,9 +703,41 @@
         return res.blob();
       })
       .then((blob) => {
+        // iOS (and in-app browsers like WhatsApp) ignore preload="none" for blob
+        // sources and never fire loadedmetadata unless the element is told to load.
+        seqVideo.preload = "auto";
         seqVideo.src = URL.createObjectURL(blob);
+        seqVideo.load();
       })
       .catch(arm);
+
+    // iOS only paints seeked frames of a muted video after it has been played once.
+    const prime = () => {
+      window.removeEventListener("touchstart", prime);
+      window.removeEventListener("scroll", prime);
+      const play = seqVideo.play();
+      if (play && play.then) play.then(() => seqVideo.pause()).catch(() => {});
+    };
+    window.addEventListener("touchstart", prime, { passive: true, once: true });
+    window.addEventListener("scroll", prime, { passive: true, once: true });
+  }
+
+  // In-app browsers (WhatsApp, Instagram) often skip autoplay: nudge the reels when they scroll into view.
+  const reelVideos = [...document.querySelectorAll(".reels video")];
+  if (reelVideos.length && "IntersectionObserver" in window) {
+    const kick = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          video.muted = true;
+          const play = video.play();
+          if (play && play.catch) play.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    reelVideos.forEach((video) => kick.observe(video));
   }
 
   document.querySelectorAll(".lux-footer .ft-acc-btn").forEach((btn) => {

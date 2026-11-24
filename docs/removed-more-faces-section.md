@@ -113,3 +113,34 @@ Images are 1024x1024 generated lifestyle shots (square, one per look). In the or
         </div>
       </section>
 ```
+
+---
+
+## Update 2026-11-24: section restored, text bar removed
+
+The section was restored, then the text bar above the cards (eyebrow, heading, intro, "Shop the edit" link and arrows) was removed. The four look cards stay. Removed bar:
+
+```html
+        <div class="edit-head">
+          <p class="edit-kicker">The lifestyle edit</p>
+          <h2 id="edit-title">More faces.<br />More <em>attitude.</em></h2>
+          <div class="edit-intro">
+            <p>
+              Work, dinner, a wedding, a drive. Four looks from the edit, a different set each time you come back.
+            </p>
+            <a href="https://www.brunomilano.com/collections/best-sellers">Shop the edit</a>
+          </div>
+          <div class="edit-controls shelf-controls">
+            <button type="button" data-edit-prev aria-label="Previous looks">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z" />
+              </svg>
+            </button>
+            <button type="button" data-edit-next aria-label="Next looks">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+                <path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+```

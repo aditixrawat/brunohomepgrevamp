@@ -5309,3 +5309,29 @@ wa-carousel.reels-strip::part(scroll-container) {
 .direct h2 {
   margin: 1rem 0 0;
 }
+
+/* Reels: reserve a 9:16 box so a tile never collapses while its video is still loading. */
+.reel {
+  display: block;
+  aspect-ratio: 9 / 16;
+  height: auto;
+}
+
+.reel video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Lifestyle cards sit on the same grey as the "Style should feel effortless" block above, with no divider. */
+.view {
+  padding-bottom: 1.5rem;
+}
+
+.edit {
+  background: var(--panel);
+  border-top: 0;
+  padding-top: 0;
+}
