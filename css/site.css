@@ -5335,3 +5335,8 @@ wa-carousel.reels-strip::part(scroll-container) {
   border-top: 0;
   padding-top: 0;
 }
+
+/* Illustrations sit straight on the grey panel (no white tile behind them). */
+.direct li {
+  background: transparent;
+}

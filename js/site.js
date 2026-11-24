@@ -695,21 +695,54 @@
     window.addEventListener("scroll", updateSequence, { passive: true });
     window.addEventListener("resize", updateSequence);
 
-    const mobileCut = window.matchMedia("(max-width: 767px)").matches;
-    const direct = (mobileCut && seqVideo.dataset.srcMobile) || seqVideo.dataset.src;
-    fetch(direct)
-      .then((res) => {
-        if (!res.ok) throw new Error("video");
-        return res.blob();
-      })
-      .then((blob) => {
-        // iOS (and in-app browsers like WhatsApp) ignore preload="none" for blob
-        // sources and never fire loadedmetadata unless the element is told to load.
-        seqVideo.preload = "auto";
-        seqVideo.src = URL.createObjectURL(blob);
-        seqVideo.load();
-      })
-      .catch(arm);
+    // Picked when loading starts (not at page load), so it matches the screen the visitor has by then.
+    const pickSource = () =>
+      (window.matchMedia("(max-width: 767px)").matches && seqVideo.dataset.srcMobile) || seqVideo.dataset.src;
+    let direct = "";
+
+    // Scrubbing needs the whole file locally, so fetch it as a blob (a few MB), but
+    // only once the section is close to the screen, with a timeout and a plain-src
+    // fallback so a slow or failed fetch never leaves the section stuck on the poster.
+    const useSrc = (src) => {
+      // iOS (and in-app browsers like WhatsApp) ignore preload="none" and never fire
+      // loadedmetadata unless the element is told to load.
+      seqVideo.preload = "auto";
+      seqVideo.src = src;
+      seqVideo.load();
+    };
+    const loadVideo = (attempt = 0) => {
+      const controller = "AbortController" in window ? new AbortController() : null;
+      const timer = window.setTimeout(() => controller?.abort(), 25000);
+      fetch(direct, controller ? { signal: controller.signal } : undefined)
+        .then((res) => {
+          if (!res.ok) throw new Error("video");
+          return res.blob();
+        })
+        .then((blob) => useSrc(URL.createObjectURL(blob)))
+        .catch(() => {
+          if (attempt < 1) loadVideo(attempt + 1);
+          else useSrc(direct);
+        })
+        .finally(() => window.clearTimeout(timer));
+    };
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      direct = pickSource();
+      loadVideo();
+    };
+    if ("IntersectionObserver" in window) {
+      const near = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          near.disconnect();
+          start();
+        }
+      }, { rootMargin: "200% 0px" });
+      near.observe(sequence);
+    } else {
+      start();
+    }
 
     // iOS only paints seeked frames of a muted video after it has been played once.
     const prime = () => {
