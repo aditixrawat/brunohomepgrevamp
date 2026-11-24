@@ -5340,3 +5340,9 @@ wa-carousel.reels-strip::part(scroll-container) {
 .direct li {
   background: transparent;
 }
+
+/* The illustrations are now real transparent PNGs, so no blend mode is needed (iOS Safari can drop multiply). */
+.direct img {
+  mix-blend-mode: normal;
+  filter: none;
+}
