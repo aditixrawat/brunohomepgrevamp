@@ -5353,3 +5353,23 @@ wa-carousel.reels-strip::part(scroll-container) {
     padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
   }
 }
+
+/* Each point is an outlined box (no fill) with the gold top edge, so the line belongs to something. */
+.direct li {
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  border-top: 2px solid var(--logo-gold);
+  background: transparent;
+}
+
+/* Boxes: plain outline at rest, gold border on hover / keyboard focus / press. */
+.direct li {
+  border: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.direct li:hover,
+.direct li:focus-within,
+.direct li:active {
+  border-color: var(--logo-gold);
+  box-shadow: inset 0 0 0 1px var(--logo-gold);
+}
