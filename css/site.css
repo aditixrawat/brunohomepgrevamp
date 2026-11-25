@@ -5346,3 +5346,10 @@ wa-carousel.reels-strip::part(scroll-container) {
   mix-blend-mode: normal;
   filter: none;
 }
+
+/* Mobile hero: copy sits near the bottom edge (the old padding reserved room for a dock that no longer exists). */
+@media (max-width: 767px) {
+  .hero-copy {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}
